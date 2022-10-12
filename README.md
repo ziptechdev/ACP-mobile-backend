@@ -1,74 +1,35 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# ACP mobile-backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### This is a repo for the backend application of the ACP project
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 1. Local setup
 
-## Description
+In order to configure and run the project on your local machine execute the following steps:
+1. Install node and yarn on your local machine
+2. Install postgres on your local machine and run it
+3. Create the dev database and test database locally (ex. `CREATE DATABASE acp-dev;`)
+4. Run `cp .env.example .env` to populate your env variables
+5. Update the `.env` file according to your local data(ex. db name created in step 3)
+6. Run `rm -rf node_modules` to clean the dependencies
+7. Run `yarn` to install the dependencies
+8. Run `yarn dev` to run the server locally in watch mode(make sure NODE_ENV=development)
+9. Run `yarn test` to run the tests
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+If you want to build and run the project without watch mode run:
 
-## Installation
+1. `yarn build` 
+2. `yarn start`
 
-```bash
-$ npm install
-```
+instead of the 8. step.
 
-## Running the app
+## 2. Docker setup
 
-```bash
-# development
-$ npm run start
+In order to configure and run the project using docker environment execute the following steps:
+1. Install and run Docker on your machine
+2. Run `cp .env.example .env` to populate your env variables
+3. Update the `.env` file accordingly (The important thing is to put "db" as DATABASE_HOST)
+4. Run `rm -rf node_modules` to clean the dependencies
+5. Run `bash bin/start.dev.sh` to run the docker network(database and server)
+6. Optionally Run `bash bin/seed.dev.sh` to seed the database
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-# ACP-mobile-backend
+Run `bash bin/stop.dev.sh` to destroy the docker network
