@@ -10,4 +10,4 @@ router.get('/test', (req, res) => {
 router.get('/favicon.ico', (req, res) => res.status(204));
 
 //api v1 main router
-export default router.use(router);
+export default router;
