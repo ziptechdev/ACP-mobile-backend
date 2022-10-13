@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  db:
+    container_name: acp-psql-db
+    image: "postgres"
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    environment:
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    command: -p ${DATABASE_PORT}
+  web:
+    image: node:16
+    container_name: acp-server
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - type: bind
+        source: ./
+        target: /usr/src/app
+    working_dir: /usr/src/app
+    command: bash -c "yarn && yarn migrate:run && yarn dev"
+    links:
+      - "db:${DATABASE_HOST}"
