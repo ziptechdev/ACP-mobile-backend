@@ -2319,6 +2319,11 @@ http-errors@2.0.0:
     statuses "2.0.1"
     toidentifier "1.0.1"
 
+http-status@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/http-status/-/http-status-1.5.3.tgz#9d1f6adcd1a609f535679f6e1b82811b96c3306e"
+  integrity sha512-jCClqdnnwigYslmtfb28vPplOgoiZ0siP2Z8C5Ua+3UKbx410v+c+jT+jh1bbI4TvcEySuX0vd/CfFZFbDkJeQ==
+
 human-signals@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-2.1.0.tgz"

@@ -1,15 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  UniqueViolationError,
-  NotFoundError,
-  NotNullViolationError,
-  ValidationError,
+  CheckViolationError,
   DataError,
   ForeignKeyViolationError,
-  CheckViolationError,
-  // these 2 are base error clases, so no need to check them explicitly
-  ConstraintViolationError,
-  DBError,
+  NotFoundError,
+  NotNullViolationError,
+  UniqueViolationError,
+  ValidationError,
 } from 'objection';
 
 import { env } from '../config/vars';
@@ -115,6 +112,20 @@ export const errorConverter = (
             constraint: err.constraint,
           }
         : {}
+    );
+  } else if (err?.errorType === ErrorTypes.NV_VALIDATION_ERROR) {
+    convertedError = new HttpError(
+      err.status,
+      err.message,
+      ErrorTypes.NV_VALIDATION_ERROR,
+      { errors: err.errors }
+    );
+  } else if (err?.errorType === ErrorTypes.NV_INTERNAL_ERROR) {
+    convertedError = new HttpError(
+      err.status,
+      err.message,
+      ErrorTypes.NV_INTERNAL_ERROR,
+      { links: err.links }
     );
   } else if (!(err instanceof HttpError)) {
     convertedError = new HttpError(
