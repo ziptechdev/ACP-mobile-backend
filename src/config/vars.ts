@@ -7,6 +7,7 @@ dotenv.config({
 
 // app
 export const env = process.env.NODE_ENV as string;
+export const appEnv = process.env.APP_ENV as string;
 export const port = process.env.PORT as string;
 
 // Database

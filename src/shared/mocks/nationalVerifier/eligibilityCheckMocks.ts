@@ -1,6 +1,6 @@
 export const eligibilityCheckSuccessResponseMock = {
-  eligibilityCheckId: '11111111111',
-  applicationId: '222',
+  eligibilityCheckId: '12224332423423f3245234ertjlnmv3',
+  applicationId: 'SDFBGD3',
   status: 'PENDING_CERT',
   _links: {
     certification: {

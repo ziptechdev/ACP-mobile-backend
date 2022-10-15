@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { httpLogger } from './middlewares/logger';
 import router from './routes';
-import { port } from './config/vars';
+import { appEnv, port } from './config/vars';
 import logger from './config/logger';
 import {
   errorHandler,
@@ -22,9 +22,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(httpLogger);
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from './swagger.json';
 
 // main router middleware
 app.use('/', router);
+
+// swagger docs
+if (appEnv !== 'production') {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 // page not found handler
 app.use(noEndpointError);

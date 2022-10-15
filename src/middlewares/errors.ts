@@ -13,6 +13,7 @@ import { env } from '../config/vars';
 import { HttpError } from '../utils/httpError';
 import logger from '../config/logger';
 import { ErrorTypes } from '../config/constants';
+import httpStatus from 'http-status';
 
 export const errorHandler = (
   err: HttpError,
@@ -115,14 +116,14 @@ export const errorConverter = (
     );
   } else if (err?.errorType === ErrorTypes.NV_VALIDATION_ERROR) {
     convertedError = new HttpError(
-      err.status,
+      httpStatus.BAD_REQUEST,
       err.message,
       ErrorTypes.NV_VALIDATION_ERROR,
       { errors: err.errors }
     );
   } else if (err?.errorType === ErrorTypes.NV_INTERNAL_ERROR) {
     convertedError = new HttpError(
-      err.status,
+      httpStatus.BAD_REQUEST,
       err.message,
       ErrorTypes.NV_INTERNAL_ERROR,
       { links: err.links }

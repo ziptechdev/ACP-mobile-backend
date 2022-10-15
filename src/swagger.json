@@ -1,0 +1,268 @@
+{
+  "openapi":"3.0.2",
+  "info":{
+    "title":"ACP Backend API docs - OpenAPI 3.0",
+    "description":"This is the ACP backend API specification based on Open API 3.0.2",
+    "license":{
+      "name":"Apache 2.0",
+      "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version":"1.0.0"
+  },
+  "servers":[
+    {
+      "url":"/api/v1"
+    }
+  ],
+  "tags":[
+    {
+      "name":"National Verifier",
+      "description":"National Verifier API routes",
+      "externalDocs":{
+        "description":"Find out more",
+        "url":"https://www.usac.org/lifeline/national-verifier/how-to-use-nv/eligibility-check-api/"
+      }
+    }
+  ],
+  "paths":{
+    "/national-verifier/eligibility-check":{
+      "post":{
+        "tags":[
+          "National Verifier"
+        ],
+        "summary":"Eligibility Check",
+        "description":"Perform acp eligibility check by calling the National Verifier API",
+        "operationId":"eligibilityCheck",
+        "requestBody":{
+          "description":"Eligibility Check on National Verifier API",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/EligibilityCheckPayload"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "200":{
+            "description":"Successful operation",
+            "content":{
+              "application/json":{
+                "schema":{
+                    "oneOf": [
+                      { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingCert" },
+                      { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingResolution" }
+                    ]
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Bad Request",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components":{
+    "schemas":{
+      "EligibilityCheckPayload":{
+        "required":[
+          "firstName",
+          "lastName",
+          "address",
+          "state",
+          "city",
+          "zipCode",
+          "dob",
+          "eligibilityProgramCode",
+          "consentInd"
+        ],
+        "type":"object",
+        "properties":{
+          "firstName":{
+            "type":"string",
+            "example":"John"
+          },
+          "middleName":{
+            "type":"string",
+            "example":"Mark"
+          },
+          "lastName":{
+            "type":"string",
+            "example":"Doe"
+          },
+          "address":{
+            "type":"string",
+            "example":"Drive 10"
+          },
+          "state":{
+            "type":"string",
+            "example":"Texas"
+          },
+          "city":{
+            "type":"string",
+            "example":"Dallas"
+          },
+          "zipCode":{
+            "type":"string",
+            "example":"123456789"
+          },
+          "dob":{
+            "type":"string",
+            "example":"1990-12-01"
+          },
+          "eligibilityProgramCode":{
+            "type":"string",
+            "example":"E1, E2, E3"
+          },
+          "consentInd":{
+            "type":"string",
+            "example":"Y"
+          },
+          "ssn4":{
+            "type":"string",
+            "example":"1234"
+          }
+        }
+      },
+      "EligibilityCheckSuccessResponsePendingCert": {
+        "type":"object",
+        "properties":{
+          "eligibilityCheckId":{
+            "type":"string",
+            "example": "12224332423423f3245234ertjlnmv3"
+          },
+          "applicationId":{
+            "type":"string",
+            "example":"SDFBGD3"
+          },
+          "status":{
+            "type": "string",
+            "example":"PENDING_CERT"
+          },
+          "_links":{
+            "type":"object",
+            "properties": {
+              "certification": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "carrierUrl.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "EligibilityCheckSuccessResponsePendingResolution": {
+        "type":"object",
+        "properties":{
+          "eligibilityCheckId":{
+            "type":"string",
+            "example": "12224332423423f3245234ertjlnmv3"
+          },
+          "applicationId":{
+            "type":"string",
+            "example":"SDFBGD3"
+          },
+          "status":{
+            "type": "string",
+            "example":"PENDING_RESOLUTION"
+          },
+          "failures":{
+            "type":"array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "eligibilityExpirationDate": {
+            "type":"string",
+            "example":"2023-01-01"
+          },
+          "lastManualReviewTime": {
+            "type":"string",
+            "example":"2023-01-01:05:05:05"
+          },
+          "numberofManualReview": {
+            "type":"string",
+            "example":"3"
+          },
+          "rejections":{
+            "type":"array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "_links":{
+            "type":"object",
+            "properties": {
+              "resolution": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "www.url.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type":"object",
+        "properties":{
+          "status":{
+            "type":"number",
+            "example": 400
+          },
+          "message":{
+            "type":"string",
+            "example":"Address is not valid"
+          },
+          "type":{
+            "type":"string",
+            "example":"NV_VALIDATION_ERROR"
+          },
+          "data":{
+            "type":"object",
+            "example":{}
+          }
+        }
+      }
+    }
+  },
+  "requestBodies":{
+    "EligibilityCheckPayload":{
+      "description":"Eligibility Check Payload",
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/EligibilityCheckPayload"
+          }
+        }
+      }
+    }
+  }
+}

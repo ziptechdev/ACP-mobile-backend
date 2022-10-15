@@ -14,4 +14,4 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 router.use('/national-verifier', nationalVerifierRoutes);
 
 //api v1 main router
-export default router;
+export default router.use('/api/v1', router);
