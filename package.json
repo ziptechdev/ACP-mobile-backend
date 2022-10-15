@@ -28,13 +28,9 @@
     "seed:make:prod": "knex seed:make --knexfile dist/knexfile.js --env production",
     "seed:run": "knex seed:run --knexfile src/knexfile.ts",
     "seed:run:prod": "knex seed:run --knexfile dist/knexfile.js --env production",
-    "test": "jest --no-cache -i"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsc --noEmit && lint-staged",
-      "commit-msg": "echo $HUSKY_GIT_PARAMS"
-    }
+    "test": "jest --no-cache -i",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,ts}": [
