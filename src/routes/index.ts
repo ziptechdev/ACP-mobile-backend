@@ -4,8 +4,8 @@ import nationalVerifierRoutes from './nationalVerifier.routes';
 const router = Router();
 
 // Test routes
-router.get('/test', (req, res) => {
-  res.send('Status OK');
+router.get('/status', (req, res) => {
+  res.send('Server is running');
 });
 
 router.get('/favicon.ico', (req, res) => res.status(204));
