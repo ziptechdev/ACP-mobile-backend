@@ -22,6 +22,10 @@
         "description":"Find out more",
         "url":"https://www.usac.org/lifeline/national-verifier/how-to-use-nv/eligibility-check-api/"
       }
+    },
+    {
+      "name":"Users",
+      "description":"Users routes"
     }
   ],
   "paths":{
@@ -60,6 +64,73 @@
           },
           "400":{
             "description":"Bad Request",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/eligibility-register/{eligibilityCheckId}":{
+      "post":{
+        "tags":[
+          "Users"
+        ],
+        "summary":"Eligibility Register",
+        "description":"Register user after they have passed eligibility check on NV using their eligibility check id",
+        "operationId":"eligibilityRegister",
+        "parameters":[
+          {
+            "name":"eligibilityCheckId",
+            "in":"path",
+            "description":"eligibilityCheckId of the user",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "requestBody":{
+          "description":"Eligibility Register",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/EligibilityRegisterBody"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "200":{
+            "description":"Successful operation - User registered",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "oneOf": [
+                    { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingCert" },
+                    { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingResolution" }
+                  ]
+                }
+              }
+            }
+          },
+          "422":{
+            "description":"Unprocessable Entity",
             "content":{
               "application/json":{
                 "schema":{
@@ -230,6 +301,24 @@
           }
         }
       },
+      "EligibilityRegisterBody": {
+        "type":"object",
+        "properties":{
+          "user":{
+            "type":"object",
+            "properties": {
+              "username":{
+                "type":"string",
+                "example":"john.doe@example.com"
+              },
+              "password":{
+                "type":"string",
+                "example":"password"
+              }
+            }
+          }
+        }
+      },
       "ErrorResponse": {
         "type":"object",
         "properties":{
@@ -260,6 +349,16 @@
         "application/json":{
           "schema":{
             "$ref":"#/components/schemas/EligibilityCheckPayload"
+          }
+        }
+      }
+    },
+    "EligibilityRegisterBody":{
+      "description":"Eligibility Register Body",
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/EligibilityRegisterBody"
           }
         }
       }

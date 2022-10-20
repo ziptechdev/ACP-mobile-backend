@@ -5,8 +5,8 @@ import { ELIGIBILITY_CHECK_ID_LENGTH } from '../config/constants';
 // [POST] /api/v1/users/eligibility-register/:eligibilityCheckId
 export const eligibilityRegisterValidation = [
   param('eligibilityCheckId').exists().isLength({
-    min: ELIGIBILITY_CHECK_ID_LENGTH,
-    max: ELIGIBILITY_CHECK_ID_LENGTH,
+    min: 1,
+    max: 10,
   }),
   body('user').exists(),
   body('user.username').exists().isEmail(),
