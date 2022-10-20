@@ -11,3 +11,7 @@ export enum ErrorTypes {
   NV_VALIDATION_ERROR = 'NV_VALIDATION_ERROR',
   NV_INTERNAL_ERROR = 'NV_INTERNAL_ERROR',
 }
+
+export const SALT_ROUNDS = 10;
+
+export const ELIGIBILITY_CHECK_ID_LENGTH = 64;
