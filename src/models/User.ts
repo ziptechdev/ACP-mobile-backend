@@ -15,7 +15,7 @@ export default class User extends Model {
         id: { type: 'integer' },
         kyc_status: { type: ['integer', 'null'] },
         nv_id: { type: ['string', 'null'] },
-        bank_account_id: { type: ['integer', 'null'] },
+        bank_account_id: { type: ['integer'] },
         first_name: { type: 'string' },
         last_name: { type: 'string' },
         middle_name: { type: ['string', 'null'] },
@@ -35,7 +35,7 @@ export default class User extends Model {
   static get relationMappings(): RelationMappings {
     return {
       bank_account: {
-        relation: Model.BelongsToOneRelation,
+        relation: Model.HasOneRelation,
         modelClass: BankAccount,
         join: {
           from: 'users.bank_account_id',
