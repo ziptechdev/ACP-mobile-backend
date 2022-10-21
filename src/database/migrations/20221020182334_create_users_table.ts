@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
 
     //TODO implement enum
     table.tinyint('kyc_status').nullable().defaultTo(null);
-    table.string('nv_id').nullable().defaultTo(null);
+    table.string('eligibility_check_id').nullable().defaultTo(null);
     table.integer('bank_account_id').unsigned().unique().index();
     table.string('first_name').index();
     table.string('last_name').index();
@@ -17,10 +17,12 @@ export async function up(knex: Knex): Promise<void> {
     table.string('zip_code').nullable().defaultTo(null);
     table.integer('social_security_number').unsigned().unique().index();
     table.date('day_of_birth').nullable().defaultTo(null);
-    table.string('street_number_and_name').nullable().defaultTo(null);
+    table.string('address').nullable().defaultTo(null);
     table.string('city').nullable().defaultTo(null);
     table.string('state').nullable().defaultTo(null);
     table.integer('phone_number').unsigned().nullable().defaultTo(null);
+
+    table.timestamps(true, true);
   });
 }
 

@@ -14,7 +14,7 @@ export default class User extends Model {
       properties: {
         id: { type: 'integer' },
         kyc_status: { type: ['integer', 'null'] },
-        nv_id: { type: ['string', 'null'] },
+        eligibility_check_id: { type: ['string', 'null'] },
         bank_account_id: { type: ['integer'] },
         first_name: { type: 'string' },
         last_name: { type: 'string' },
@@ -24,7 +24,7 @@ export default class User extends Model {
         zip_code: { type: ['string', 'null'] },
         social_security_number: { type: 'integer' },
         day_of_birth: { type: ['string', 'null'] },
-        street_number_and_name: { type: ['string', 'null'] },
+        address: { type: ['string', 'null'] },
         city: { type: ['string', 'null'] },
         state: { type: ['string', 'null'] },
         phone_number: { type: ['integer', 'null'] },
