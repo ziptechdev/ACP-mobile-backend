@@ -11,6 +11,14 @@ export async function up(knex: Knex): Promise<void> {
       table.string('account_holder_name');
       table.integer('account_number').unsigned();
       table.date('expiration_date');
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+        .index();
       table.timestamps(true, true);
     }
   );

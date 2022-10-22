@@ -53,7 +53,7 @@ export interface eligibilityCheckSuccessResponsePendingResolution {
   rejections: { [key: string]: string }[];
   _links: {
     resolution: {
-      href: 'https://api.universalservice.org/ebca-svc/security/getPage?token={eligibilityCheckId)&id={idnumber)';
+      href: string;
     };
   };
 }
