@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('email').unique().index().nullable().defaultTo(null);
     table.string('password').nullable().defaultTo(null);
     table.string('zip_code').nullable().defaultTo(null);
-    table.integer('social_security_number').unsigned().unique().index();
+    table.string('social_security_number').unique().index();
     table.date('day_of_birth').nullable().defaultTo(null);
     table.string('address').nullable().defaultTo(null);
     table.string('city').nullable().defaultTo(null);
