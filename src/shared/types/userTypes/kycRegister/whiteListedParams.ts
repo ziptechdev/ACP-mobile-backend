@@ -3,6 +3,7 @@ export const kycRegisterUserWhiteListedParams = [
   'last_name',
   'username',
   'password',
+  'phone_number',
   'social_security_number',
 ];
 

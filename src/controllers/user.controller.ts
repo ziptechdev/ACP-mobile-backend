@@ -23,6 +23,7 @@ import {
 } from '../shared/types/userTypes/kycRegister/whiteListedParams';
 import { registerUserBankAccount } from '../services/db/bank_accounts/bankAccounts.service';
 import { RegisterUserBankAccountParams } from '../services/db/bank_accounts/params';
+import User from '../models/User';
 
 export const eligibilityRegister = async (
   req: Request,
@@ -64,27 +65,33 @@ export const kycRegister = async (
       data.bank_account.expiration_date
     );
 
-    const user = await registerKycUser(
-      filterParams<KYCRegisterParams>(
-        { ...data.user, password: hashedPassword },
-        kycRegisterUserWhiteListedParams
-      )
-    );
+    const user = await User.transaction(async trx => {
+      const kycRegistration = await registerKycUser(
+        trx,
+        filterParams<KYCRegisterParams>(
+          { ...data.user, password: hashedPassword },
+          kycRegisterUserWhiteListedParams
+        )
+      );
+
+      await registerUserBankAccount(
+        trx,
+        kycRegistration,
+        filterParams<RegisterUserBankAccountParams>(
+          {
+            ...data.bank_account,
+            bank_number: hashedBankNumber,
+            account_number: hashedAccountNumber,
+            expiration_date: formatedExpirationDate,
+          },
+          kycRegisterBankAccountWhiteListedParams
+        )
+      );
+
+      return kycRegistration;
+    });
 
     //TODO: KYC Verification
-
-    await registerUserBankAccount(
-      user.id,
-      filterParams<RegisterUserBankAccountParams>(
-        {
-          ...data.bank_account,
-          bank_number: hashedBankNumber,
-          account_number: hashedAccountNumber,
-          expiration_date: formatedExpirationDate,
-        },
-        kycRegisterBankAccountWhiteListedParams
-      )
-    );
 
     res.status(httpStatus.CREATED).json(serializeKycUser(user));
   } catch (error: any) {

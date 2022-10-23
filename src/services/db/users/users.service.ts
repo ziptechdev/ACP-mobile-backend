@@ -1,5 +1,7 @@
 import { RegisterEligibleUserParams, RegisterKycUserParams } from './params';
 import User from '../../../models/User';
+import { Knex } from 'knex';
+import Transaction = Knex.Transaction;
 
 export const registerEligibleUser = async (
   eligibilityCheckId: string,
@@ -14,5 +16,6 @@ export const registerEligibleUser = async (
 };
 
 export const registerKycUser = async (
+  trx: Transaction,
   params: RegisterKycUserParams
-): Promise<User> => User.query().insert(params).returning('*');
+): Promise<User> => User.query(trx).insert(params);

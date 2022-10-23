@@ -13,7 +13,7 @@ export default class BankAccount extends BaseModel {
   account_holder_name: string;
   account_number: string;
   expiration_date: string;
-  user_id: number;
+  user_id!: number;
 
   static get jsonSchema(): JSONSchema {
     return {
@@ -24,7 +24,6 @@ export default class BankAccount extends BaseModel {
         'account_holder_name',
         'account_number',
         'expiration_date',
-        'user_id',
       ],
 
       properties: {

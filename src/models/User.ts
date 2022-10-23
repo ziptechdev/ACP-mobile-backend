@@ -54,7 +54,7 @@ export default class User extends BaseModel {
 
   static get relationMappings(): RelationMappings {
     return {
-      user: {
+      bank_account: {
         relation: Model.HasOneRelation,
         modelClass: BankAccount,
         join: {
