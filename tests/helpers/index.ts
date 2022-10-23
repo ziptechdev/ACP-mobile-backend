@@ -14,7 +14,10 @@ export const seedDb = (): Promise<[string[]]> => {
 };
 
 export const unseedDb = async (): Promise<void> => {
-  // TODO remove all data from all tables
+  await testDatabase.schema.raw(
+    'TRUNCATE bank_accounts RESTART IDENTITY CASCADE'
+  );
+  await testDatabase.schema.raw('TRUNCATE users RESTART IDENTITY CASCADE');
 };
 
 export const destroyDb = (): Promise<void> => {

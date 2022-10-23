@@ -1,7 +1,26 @@
 import { JSONSchema, Model, RelationMappings } from 'objection';
+import BaseModel from './BaseModel';
 import BankAccount from './BankAccount';
 
-export default class User extends Model {
+export default class User extends BaseModel {
+  id!: number;
+  username: string;
+  password: string;
+  firstName!: string;
+  lastName!: string;
+  middleName: string;
+  zipCode!: string;
+  address: string;
+  city: string;
+  state: string;
+  phoneNumber!: string;
+  dateOfBirth: string;
+  socialSecurityNumber!: string;
+  kycStatus: number; // TODO enum
+  eligibilityCheckId: string;
+  applicationId: string;
+  eligibilityCheckStatus: string;
+
   static get tableName(): string {
     return 'users';
   }
@@ -15,7 +34,8 @@ export default class User extends Model {
         id: { type: 'integer' },
         kyc_status: { type: ['integer', 'null'] },
         eligibility_check_id: { type: ['string', 'null'] },
-        bank_account_id: { type: ['integer'] },
+        application_id: { type: ['string', 'null'] },
+        eligibility_check_status: { type: ['string', 'null'] },
         first_name: { type: 'string' },
         last_name: { type: 'string' },
         middle_name: { type: ['string', 'null'] },
@@ -34,12 +54,12 @@ export default class User extends Model {
 
   static get relationMappings(): RelationMappings {
     return {
-      bank_account: {
+      user: {
         relation: Model.HasOneRelation,
         modelClass: BankAccount,
         join: {
-          from: 'users.bank_account_id',
-          to: 'bank_accounts.id',
+          from: 'users.id',
+          to: 'bank_accounts.user_id',
         },
       },
     };

@@ -1,9 +1,13 @@
 import { JSONSchema, Model, RelationMappings } from 'objection';
+import BaseModel from './BaseModel';
+import User from './User';
 
-export default class BankAccount extends Model {
+export default class BankAccount extends BaseModel {
   static get tableName(): string {
     return 'bank_accounts';
   }
+
+  // TODO add fields
 
   static get jsonSchema(): JSONSchema {
     return {
@@ -23,6 +27,20 @@ export default class BankAccount extends Model {
         account_holder_name: { type: 'string' },
         account_number: { type: 'integer' },
         expiration_date: { type: 'string' },
+        user_id: { type: ['integer'] },
+      },
+    };
+  }
+
+  static get relationMappings(): RelationMappings {
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'bank_accounts.user_id',
+          to: 'users.id',
+        },
       },
     };
   }
