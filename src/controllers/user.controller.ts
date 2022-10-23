@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { generateHashPassword } from '../utils/generateHash';
+
+import { filterParams } from '../shared/types';
+import httpStatus from 'http-status';
+import { serializeEligibleUser } from '../serializers/users';
+import { eligibilityRegisterWhiteListedParams } from '../shared/types/userTypes/whiteListedParams';
 import {
   EligibilityRegisterBody,
   EligibilityRegisterParams,
-} from '../shared/types/userTypes/eligibilityRegister/eligibilityRegisterTypes';
-import { registerEligibleUser } from '../services/db/users/users.service';
-import { filterParams } from '../shared/types';
-import { eligibilityRegisterWhiteListedParams } from '../shared/types/userTypes/eligibilityRegister/whiteListedParams';
-import httpStatus from 'http-status';
-import { serializeEligibleUser } from '../serializers/users';
+} from '../shared/types/userTypes/params';
+import { registerEligibleUser } from '../services/db/users.service';
 
 export const eligibilityRegister = async (
   req: Request,

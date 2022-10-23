@@ -6,10 +6,11 @@ export const eligibilityCheckReqBody = {
   state: 'Texas',
   city: 'Dallas',
   zipCode: '123456789',
-  dob: '1990-12-01',
+  dateOfBirth: '1990-12-01',
   eligibilityProgramCode: 'E1, E2, E3',
   consentInd: 'Y',
-  ssn4: '1234',
+  socialSecurityNumber: '123456789',
+  phoneNumber: '123456789',
 };
 
 export const eligibilityCheckSuccessResponsePendingCert = {

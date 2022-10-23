@@ -6,9 +6,10 @@ export interface eligibilityCheckPayload {
   state: string;
   city: string;
   zipCode: string;
+  phoneNumber: string;
   urbanizationCode?: string;
-  dob: string;
-  ssn4?: string;
+  dateOfBirth: string;
+  socialSecurityNumber: string;
   tribalId?: string;
   bqpFirstName?: string;
   bqpLastName?: string;

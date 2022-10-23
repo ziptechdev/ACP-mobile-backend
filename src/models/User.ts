@@ -9,7 +9,7 @@ export default class User extends BaseModel {
   firstName!: string;
   lastName!: string;
   middleName: string;
-  zipCode!: string;
+  zipCode: string;
   address: string;
   city: string;
   state: string;
@@ -20,6 +20,7 @@ export default class User extends BaseModel {
   eligibilityCheckId: string;
   applicationId: string;
   eligibilityCheckStatus: string;
+  count!: number;
 
   static get tableName(): string {
     return 'users';
@@ -28,7 +29,12 @@ export default class User extends BaseModel {
   static get jsonSchema(): JSONSchema {
     return {
       type: 'object',
-      required: ['first_name', 'last_name', 'social_security_number'],
+      required: [
+        'firstName',
+        'lastName',
+        'socialSecurityNumber',
+        'phoneNumber',
+      ],
 
       properties: {
         id: { type: 'integer' },
