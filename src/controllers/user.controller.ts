@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { generateHashedValue } from '../utils/generateHash';
+import { formatCardExpirationDate } from '../utils/date';
 import {
   EligibilityRegisterBody,
   EligibilityRegisterParams,
@@ -59,6 +60,9 @@ export const kycRegister = async (
     const hashedAccountNumber = await generateHashedValue(
       data.bank_account.account_number
     );
+    const formatedExpirationDate = formatCardExpirationDate(
+      data.bank_account.expiration_date
+    );
 
     const user = await registerKycUser(
       filterParams<KYCRegisterParams>(
@@ -76,6 +80,7 @@ export const kycRegister = async (
           ...data.bank_account,
           bank_number: hashedBankNumber,
           account_number: hashedAccountNumber,
+          expiration_date: formatedExpirationDate,
         },
         kycRegisterBankAccountWhiteListedParams
       )

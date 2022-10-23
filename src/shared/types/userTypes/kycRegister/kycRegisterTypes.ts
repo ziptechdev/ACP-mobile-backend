@@ -9,6 +9,7 @@ export interface KYCRegisterParams {
   username: string;
   password: string;
   confirmed_password: string;
+  phone_number: number;
   social_security_number: number;
 }
 

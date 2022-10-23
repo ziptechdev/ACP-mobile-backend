@@ -35,7 +35,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('address').nullable().defaultTo(null);
     table.string('city').nullable().defaultTo(null);
     table.string('state').nullable().defaultTo(null);
-    table.integer('phone_number').unsigned().notNullable().defaultTo(null);
+    table.integer('phone_number').unsigned().defaultTo(null);
 
     table.timestamps(true, true);
   });
