@@ -1,4 +1,4 @@
-import { RegisterEligibleUserParams } from './params';
+import { RegisterEligibleUserParams, RegisterKycUserParams } from './params';
 import User from '../../../models/User';
 
 export const registerEligibleUser = async (
@@ -12,3 +12,7 @@ export const registerEligibleUser = async (
     .throwIfNotFound();
   return eligibleUser.$query().patchAndFetch(params);
 };
+
+export const registerKycUser = async (
+  params: RegisterKycUserParams
+): Promise<User> => User.query().insert(params).returning('*');

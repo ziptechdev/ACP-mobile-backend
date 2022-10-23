@@ -7,7 +7,13 @@ export default class BankAccount extends BaseModel {
     return 'bank_accounts';
   }
 
-  // TODO add fields
+  id!: number;
+  bank_name: string;
+  bank_number: string;
+  account_holder_name: string;
+  account_number: string;
+  expiration_date: string;
+  user_id: number;
 
   static get jsonSchema(): JSONSchema {
     return {
@@ -18,14 +24,15 @@ export default class BankAccount extends BaseModel {
         'account_holder_name',
         'account_number',
         'expiration_date',
+        'user_id',
       ],
 
       properties: {
         id: { type: 'integer' },
         bank_name: { type: 'string' },
-        bank_number: { type: 'integer' },
+        bank_number: { type: 'string' },
         account_holder_name: { type: 'string' },
-        account_number: { type: 'integer' },
+        account_number: { type: 'string' },
         expiration_date: { type: 'string' },
         user_id: { type: ['integer'] },
       },
