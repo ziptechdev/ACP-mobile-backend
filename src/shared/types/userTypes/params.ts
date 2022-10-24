@@ -25,23 +25,23 @@ export interface CreateEligibleUserParams {
 
 export interface KYCRegisterBody {
   user: KYCRegisterParams;
-  bank_account: BankAccountParams;
+  bankAccount: BankAccountParams;
 }
 
 export interface KYCRegisterParams {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   username: string;
   password: string;
-  confirmed_password: string;
-  phone_number: number;
-  social_security_number: number;
+  confirmedPassword: string;
+  phoneNumber: string;
+  socialSecurityNumber: string;
 }
 
 export interface BankAccountParams {
-  bank_name: string;
-  bank_number: string;
-  account_holder_name: string;
-  account_number: string;
-  expiration_date: string;
+  bankName: string;
+  bankNumber: string;
+  accountHolderName: string;
+  accountNumber: string;
+  expirationDate: string;
 }

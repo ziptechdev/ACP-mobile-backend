@@ -17,10 +17,10 @@ import {
   EligibilityRegisterParams,
   KYCRegisterBody,
   KYCRegisterParams,
+  BankAccountParams,
 } from '../shared/types/userTypes/params';
 import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
 import { registerUserBankAccount } from '../services/db/bankAccounts.service';
-import { RegisterUserBankAccountParams } from '../services/db/bank_accounts/params';
 import User from '../models/User';
 
 export const eligibilityRegister = async (
@@ -54,13 +54,13 @@ export const kycRegister = async (
     const data = Object.assign({}, req.body) as KYCRegisterBody;
     const hashedPassword = await generateHashedValue(data.user.password);
     const hashedBankNumber = await generateHashedValue(
-      data.bank_account.bank_number
+      data.bankAccount.bankNumber
     );
     const hashedAccountNumber = await generateHashedValue(
-      data.bank_account.account_number
+      data.bankAccount.accountNumber
     );
     const formatedExpirationDate = formatCardExpirationDate(
-      data.bank_account.expiration_date
+      data.bankAccount.expirationDate
     );
 
     const user = await User.transaction(async trx => {
@@ -75,12 +75,12 @@ export const kycRegister = async (
       await registerUserBankAccount(
         trx,
         kycRegistration,
-        filterParams<RegisterUserBankAccountParams>(
+        filterParams<BankAccountParams>(
           {
-            ...data.bank_account,
-            bank_number: hashedBankNumber,
-            account_number: hashedAccountNumber,
-            expiration_date: formatedExpirationDate,
+            ...data.bankAccount,
+            bankNumber: hashedBankNumber,
+            accountNumber: hashedAccountNumber,
+            expirationDate: formatedExpirationDate,
           },
           kycRegisterBankAccountWhiteListedParams
         )

@@ -12,7 +12,7 @@ export const eligibleUserSerializedFields = [
 export const kycUserSerializedFields = [
   'id',
   'username',
-  'first_name',
-  'last_name',
-  'phone_number',
+  'firstName',
+  'lastName',
+  'phoneNumber',
 ]; // TODO: add kyc id doc and selfie pic

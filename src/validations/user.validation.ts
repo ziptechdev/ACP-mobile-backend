@@ -21,8 +21,8 @@ export const eligibilityRegisterValidation = [
 // [POST] /api/v1/users/kyc-register
 export const kycRegisterValidation = [
   body('user').exists(),
-  body('user.first_name').exists().isLength({ min: 3, max: 20 }),
-  body('user.last_name').exists().isLength({ min: 3, max: 20 }),
+  body('user.firstName').exists().isLength({ min: 3, max: 20 }),
+  body('user.lastName').exists().isLength({ min: 3, max: 20 }),
   body('user.username')
     .exists()
     .isEmail()
@@ -31,19 +31,17 @@ export const kycRegisterValidation = [
     .exists()
     .isStrongPassword()
     .custom(isPasswordConfirmedValidationRule),
-  body('user.phone_number').exists(),
-  body('user.social_security_number')
+  body('user.phoneNumber').exists(),
+  body('user.socialSecurityNumber')
     .exists()
     .matches(/^(?!666|000|9\d{2})\d{3}(?!00)\d{2}(?!0{4})\d{4}$/)
     .custom(isExistingSocialSecurityNumberValidationRule),
-  body('bank_account').exists(),
-  body('bank_account.bank_name').exists().isLength({ min: 3, max: 20 }),
-  body('bank_account.bank_number').exists(),
-  body('bank_account.account_holder_name')
-    .exists()
-    .isLength({ min: 3, max: 20 }),
-  body('bank_account.account_number').exists(),
-  body('bank_account.expiration_date')
+  body('bankAccount').exists(),
+  body('bankAccount.bankName').exists().isLength({ min: 3, max: 20 }),
+  body('bankAccount.bankNumber').exists(),
+  body('bankAccount.accountHolderName').exists().isLength({ min: 3, max: 20 }),
+  body('bankAccount.accountNumber').exists(),
+  body('bankAccount.expirationDate')
     .exists()
     .matches(/^(0[1-9]|1[0-2])\/([0-9]{2})$/g)
     .custom(isCardDateInTheFutureValidationRule),

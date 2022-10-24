@@ -8,22 +8,22 @@ export default class BankAccount extends BaseModel {
   }
 
   id!: number;
-  bank_name: string;
-  bank_number: string;
-  account_holder_name: string;
-  account_number: string;
-  expiration_date: string;
-  user_id!: number;
+  bankName: string;
+  bankNumber: string;
+  accountHolderName: string;
+  accountNumber: string;
+  expirationDate: string;
+  userId!: number;
 
   static get jsonSchema(): JSONSchema {
     return {
       type: 'object',
       required: [
-        'bank_name',
-        'bank_number',
-        'account_holder_name',
-        'account_number',
-        'expiration_date',
+        'bankName',
+        'bankNumber',
+        'accountHolderName',
+        'accountNumber',
+        'expirationDate',
       ],
     };
   }

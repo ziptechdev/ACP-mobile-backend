@@ -9,5 +9,5 @@ export const registerUserBankAccount = async (
   user: User,
   params: BankAccountParams
 ): Promise<Model> => {
-  return user.$relatedQuery('bank_account', trx).insert(params);
+  return user.$relatedQuery('bankAccount', trx).insert(params);
 };

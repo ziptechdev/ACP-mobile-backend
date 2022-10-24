@@ -17,18 +17,18 @@ export const createEligibleUserWhiteListedParams = [
 ];
 
 export const kycRegisterUserWhiteListedParams = [
-  'first_name',
-  'last_name',
+  'firstName',
+  'lastName',
   'username',
   'password',
-  'phone_number',
-  'social_security_number',
+  'phoneNumber',
+  'socialSecurityNumber',
 ];
 
 export const kycRegisterBankAccountWhiteListedParams = [
-  'bank_name',
-  'bank_number',
-  'account_holder_name',
-  'account_number',
-  'expiration_date',
+  'bankName',
+  'bankNumber',
+  'accountHolderName',
+  'accountNumber',
+  'expirationDate',
 ];
