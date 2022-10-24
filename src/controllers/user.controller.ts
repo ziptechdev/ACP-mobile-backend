@@ -2,26 +2,24 @@ import { Request, Response, NextFunction } from 'express';
 import { generateHashedValue } from '../utils/generateHash';
 import { formatCardExpirationDate } from '../utils/date';
 import {
-  EligibilityRegisterBody,
-  EligibilityRegisterParams,
-} from '../shared/types/userTypes/eligibilityRegister/eligibilityRegisterTypes';
-import {
   registerEligibleUser,
   registerKycUser,
-} from '../services/db/users/users.service';
+} from '../services/db/users.service';
 import { filterParams } from '../shared/types';
-import { eligibilityRegisterWhiteListedParams } from '../shared/types/userTypes/eligibilityRegister/whiteListedParams';
 import httpStatus from 'http-status';
-import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
 import {
-  KYCRegisterBody,
-  KYCRegisterParams,
-} from '../shared/types/userTypes/kycRegister/kycRegisterTypes';
-import {
+  eligibilityRegisterWhiteListedParams,
   kycRegisterBankAccountWhiteListedParams,
   kycRegisterUserWhiteListedParams,
-} from '../shared/types/userTypes/kycRegister/whiteListedParams';
-import { registerUserBankAccount } from '../services/db/bank_accounts/bankAccounts.service';
+} from '../shared/types/userTypes/whiteListedParams';
+import {
+  EligibilityRegisterBody,
+  EligibilityRegisterParams,
+  KYCRegisterBody,
+  KYCRegisterParams,
+} from '../shared/types/userTypes/params';
+import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
+import { registerUserBankAccount } from '../services/db/bankAccounts.service';
 import { RegisterUserBankAccountParams } from '../services/db/bank_accounts/params';
 import User from '../models/User';
 

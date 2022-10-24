@@ -194,7 +194,11 @@
             "type":"string",
             "example":"123456789"
           },
-          "dob":{
+          "phoneNumber":{
+            "type":"string",
+            "example":"123456789"
+          },
+          "dateOfBirth":{
             "type":"string",
             "example":"1990-12-01"
           },
@@ -206,9 +210,9 @@
             "type":"string",
             "example":"Y"
           },
-          "ssn4":{
+          "socialSecurityNumber":{
             "type":"string",
-            "example":"1234"
+            "example":"123456789"
           }
         }
       },

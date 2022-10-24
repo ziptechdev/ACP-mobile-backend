@@ -9,7 +9,7 @@ export default class User extends BaseModel {
   firstName!: string;
   lastName!: string;
   middleName: string;
-  zipCode!: string;
+  zipCode: string;
   address: string;
   city: string;
   state: string;
@@ -20,6 +20,7 @@ export default class User extends BaseModel {
   eligibilityCheckId: string;
   applicationId: string;
   eligibilityCheckStatus: string;
+  count!: number;
 
   static get tableName(): string {
     return 'users';
@@ -28,27 +29,12 @@ export default class User extends BaseModel {
   static get jsonSchema(): JSONSchema {
     return {
       type: 'object',
-      required: ['first_name', 'last_name', 'social_security_number'],
-
-      properties: {
-        id: { type: 'integer' },
-        kyc_status: { type: ['integer', 'null'] },
-        eligibility_check_id: { type: ['string', 'null'] },
-        application_id: { type: ['string', 'null'] },
-        eligibility_check_status: { type: ['string', 'null'] },
-        first_name: { type: 'string' },
-        last_name: { type: 'string' },
-        middle_name: { type: ['string', 'null'] },
-        email: { type: ['string', 'null'] },
-        password: { type: ['string', 'null'] },
-        zip_code: { type: ['string', 'null'] },
-        social_security_number: { type: 'integer' },
-        day_of_birth: { type: ['string', 'null'] },
-        address: { type: ['string', 'null'] },
-        city: { type: ['string', 'null'] },
-        state: { type: ['string', 'null'] },
-        phone_number: { type: ['integer', 'null'] },
-      },
+      required: [
+        'firstName',
+        'lastName',
+        'socialSecurityNumber',
+        'phoneNumber',
+      ],
     };
   }
 

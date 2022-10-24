@@ -25,16 +25,6 @@ export default class BankAccount extends BaseModel {
         'account_number',
         'expiration_date',
       ],
-
-      properties: {
-        id: { type: 'integer' },
-        bank_name: { type: 'string' },
-        bank_number: { type: 'string' },
-        account_holder_name: { type: 'string' },
-        account_number: { type: 'string' },
-        expiration_date: { type: 'string' },
-        user_id: { type: ['integer'] },
-      },
     };
   }
 
