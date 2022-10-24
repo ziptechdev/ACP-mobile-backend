@@ -22,6 +22,7 @@ import {
 import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
 import { registerUserBankAccount } from '../services/db/bankAccounts.service';
 import User from '../models/User';
+import { httpResponse } from '../utils/httpResponse';
 
 export const eligibilityRegister = async (
   req: Request,
@@ -39,7 +40,7 @@ export const eligibilityRegister = async (
         eligibilityRegisterWhiteListedParams
       )
     );
-    res.status(httpStatus.OK).send(serializeEligibleUser(user));
+    httpResponse(res, serializeEligibleUser(user), httpStatus.OK);
   } catch (error: any) {
     next(error);
   }
@@ -91,7 +92,7 @@ export const kycRegister = async (
 
     //TODO: KYC Verification
 
-    res.status(httpStatus.CREATED).json(serializeKycUser(user));
+    httpResponse(res, serializeKycUser(user), httpStatus.CREATED);
   } catch (error: any) {
     next(error);
   }
