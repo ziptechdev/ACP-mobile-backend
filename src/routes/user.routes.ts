@@ -1,6 +1,12 @@
 import { Router } from 'express';
-import { eligibilityRegister } from '../controllers/user.controller';
-import { eligibilityRegisterValidation } from '../validations/user.validation';
+import {
+  eligibilityRegister,
+  kycRegister,
+} from '../controllers/user.controller';
+import {
+  eligibilityRegisterValidation,
+  kycRegisterValidation,
+} from '../validations/user.validation';
 
 const router = Router();
 
@@ -9,5 +15,7 @@ router.post(
   eligibilityRegisterValidation,
   eligibilityRegister
 );
+
+router.post('/kyc-register', kycRegisterValidation, kycRegister);
 
 export default router;

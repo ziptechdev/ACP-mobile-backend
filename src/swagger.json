@@ -121,10 +121,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "oneOf": [
-                    { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingCert" },
-                    { "$ref":"#/components/schemas/EligibilityCheckSuccessResponsePendingResolution" }
-                  ]
+                  "$ref":"#/components/schemas/EligibleUser"
                 }
               }
             }
@@ -197,7 +194,11 @@
             "type":"string",
             "example":"123456789"
           },
-          "dob":{
+          "phoneNumber":{
+            "type":"string",
+            "example":"123456789"
+          },
+          "dateOfBirth":{
             "type":"string",
             "example":"1990-12-01"
           },
@@ -209,9 +210,9 @@
             "type":"string",
             "example":"Y"
           },
-          "ssn4":{
+          "socialSecurityNumber":{
             "type":"string",
-            "example":"1234"
+            "example":"123456789"
           }
         }
       },
@@ -316,6 +317,43 @@
                 "example":"password"
               }
             }
+          }
+        }
+      },
+      "EligibleUser": {
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"number",
+            "example": 1
+          },
+          "username":{
+            "type":"string",
+            "example":"john.doe@example.com"
+          },
+          "firstName":{
+            "type":"string",
+            "example":"John"
+          },
+          "lastName":{
+            "type":"string",
+            "example": "Doe"
+          },
+          "middleName":{
+            "type":"string",
+            "example": "Mark"
+          },
+          "eligibilityCheckId":{
+            "type":"string",
+            "example": "2323l4h2lk34n23"
+          },
+          "applicationId":{
+            "type":"string",
+            "example": "ewklrn3kl3n2"
+          },
+          "eligibilityCheckStatus":{
+            "type":"string",
+            "example": "PENDING_CERT"
           }
         }
       },

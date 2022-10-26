@@ -6,9 +6,10 @@ export interface eligibilityCheckPayload {
   state: string;
   city: string;
   zipCode: string;
+  phoneNumber: string;
   urbanizationCode?: string;
-  dob: string;
-  ssn4?: string;
+  dateOfBirth: string;
+  socialSecurityNumber: string;
   tribalId?: string;
   bqpFirstName?: string;
   bqpLastName?: string;
@@ -53,7 +54,7 @@ export interface eligibilityCheckSuccessResponsePendingResolution {
   rejections: { [key: string]: string }[];
   _links: {
     resolution: {
-      href: 'https://api.universalservice.org/ebca-svc/security/getPage?token={eligibilityCheckId)&id={idnumber)';
+      href: string;
     };
   };
 }

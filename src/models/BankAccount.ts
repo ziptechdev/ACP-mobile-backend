@@ -1,28 +1,42 @@
 import { JSONSchema, Model, RelationMappings } from 'objection';
+import BaseModel from './BaseModel';
+import User from './User';
 
-export default class BankAccount extends Model {
+export default class BankAccount extends BaseModel {
   static get tableName(): string {
     return 'bank_accounts';
   }
+
+  id!: number;
+  bankName: string;
+  bankNumber: string;
+  accountHolderName: string;
+  accountNumber: string;
+  expirationDate: string;
+  userId!: number;
 
   static get jsonSchema(): JSONSchema {
     return {
       type: 'object',
       required: [
-        'bank_name',
-        'bank_number',
-        'account_holder_name',
-        'account_number',
-        'expiration_date',
+        'bankName',
+        'bankNumber',
+        'accountHolderName',
+        'accountNumber',
+        'expirationDate',
       ],
+    };
+  }
 
-      properties: {
-        id: { type: 'integer' },
-        bank_name: { type: 'string' },
-        bank_number: { type: 'integer' },
-        account_holder_name: { type: 'string' },
-        account_number: { type: 'integer' },
-        expiration_date: { type: 'string' },
+  static get relationMappings(): RelationMappings {
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'bank_accounts.user_id',
+          to: 'users.id',
+        },
       },
     };
   }

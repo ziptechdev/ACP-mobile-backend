@@ -7,10 +7,18 @@ export async function up(knex: Knex): Promise<void> {
     function (table: CreateTableBuilder) {
       table.increments('id').primary().unsigned();
       table.string('bank_name');
-      table.integer('bank_number').unsigned();
+      table.string('bank_number');
       table.string('account_holder_name');
-      table.integer('account_number').unsigned();
+      table.string('account_number');
       table.date('expiration_date');
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+        .index();
       table.timestamps(true, true);
     }
   );
