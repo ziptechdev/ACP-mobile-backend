@@ -15,3 +15,20 @@ export const createEligibleUserWhiteListedParams = [
   'applicationId',
   'eligibilityCheckStatus',
 ];
+
+export const kycRegisterUserWhiteListedParams = [
+  'firstName',
+  'lastName',
+  'username',
+  'password',
+  'phoneNumber',
+  'socialSecurityNumber',
+];
+
+export const kycRegisterBankAccountWhiteListedParams = [
+  'bankName',
+  'bankNumber',
+  'accountHolderName',
+  'accountNumber',
+  'expirationDate',
+];

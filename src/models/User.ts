@@ -35,32 +35,12 @@ export default class User extends BaseModel {
         'socialSecurityNumber',
         'phoneNumber',
       ],
-
-      properties: {
-        id: { type: 'integer' },
-        kyc_status: { type: ['integer', 'null'] },
-        eligibility_check_id: { type: ['string', 'null'] },
-        application_id: { type: ['string', 'null'] },
-        eligibility_check_status: { type: ['string', 'null'] },
-        first_name: { type: 'string' },
-        last_name: { type: 'string' },
-        middle_name: { type: ['string', 'null'] },
-        email: { type: ['string', 'null'] },
-        password: { type: ['string', 'null'] },
-        zip_code: { type: ['string', 'null'] },
-        social_security_number: { type: 'integer' },
-        day_of_birth: { type: ['string', 'null'] },
-        address: { type: ['string', 'null'] },
-        city: { type: ['string', 'null'] },
-        state: { type: ['string', 'null'] },
-        phone_number: { type: ['integer', 'null'] },
-      },
     };
   }
 
   static get relationMappings(): RelationMappings {
     return {
-      user: {
+      bankAccount: {
         relation: Model.HasOneRelation,
         modelClass: BankAccount,
         join: {

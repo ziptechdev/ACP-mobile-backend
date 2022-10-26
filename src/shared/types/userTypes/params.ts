@@ -22,3 +22,26 @@ export interface CreateEligibleUserParams {
   applicationId: string;
   eligibilityCheckStatus: string;
 }
+
+export interface KYCRegisterBody {
+  user: KYCRegisterParams;
+  bankAccount: BankAccountParams;
+}
+
+export interface KYCRegisterParams {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  confirmedPassword: string;
+  phoneNumber: string;
+  socialSecurityNumber: string;
+}
+
+export interface BankAccountParams {
+  bankName: string;
+  bankNumber: string;
+  accountHolderName: string;
+  accountNumber: string;
+  expirationDate: string;
+}

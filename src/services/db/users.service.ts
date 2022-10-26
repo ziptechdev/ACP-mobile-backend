@@ -1,8 +1,11 @@
 import {
   CreateEligibleUserParams,
   EligibilityRegisterParams,
+  KYCRegisterParams,
 } from '../../shared/types/userTypes/params';
 import User from '../../models/User';
+import { Knex } from 'knex';
+import Transaction = Knex.Transaction;
 
 export const getUsersCount = async (): Promise<number> => {
   return (await User.query().count())[0].count;
@@ -29,3 +32,8 @@ export const findOrCreateEligibleUser = async (
   });
   return eligibleUser || User.query().insert(params);
 };
+
+export const registerKycUser = async (
+  trx: Transaction,
+  params: KYCRegisterParams
+): Promise<User> => User.query(trx).insert(params);
