@@ -166,7 +166,10 @@ describe('/eligibility-register POST', () => {
       .send(body)
       .expect(httpStatus.OK);
     expect(res.body.error).toBeUndefined();
-    expect(Object.keys(res.body).sort()).toEqual(
+    expect(res.body.message).toBeDefined();
+    expect(res.body.data).toBeDefined();
+    expect(res.body.statusCode).toBeDefined();
+    expect(Object.keys(res.body.data).sort()).toEqual(
       eligibleUserSerializedFields.sort()
     );
   });
@@ -183,7 +186,7 @@ describe('/eligibility-register POST', () => {
       .send(body)
       .expect(httpStatus.OK);
     expect(res.body.error).toBeUndefined();
-    expect(res.body.username).toBe(body.user.username);
+    expect(res.body.data.username).toBe(body.user.username);
   });
 
   test('should successfully whitelist params', async () => {
@@ -221,7 +224,7 @@ describe('/eligibility-register POST', () => {
       eligibilityCheckId: eligibleUser.eligibilityCheckId,
     });
     expect(user).toBeInstanceOf(User);
-    expect(user.id).toBe(res.body.id);
+    expect(user.id).toBe(res.body.data.id);
     expect(user.username).toBe(body.user.username);
     expect(user.password.length).toBeGreaterThan(body.user.password.length);
   });
