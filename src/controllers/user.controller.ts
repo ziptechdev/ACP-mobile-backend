@@ -53,16 +53,18 @@ export const kycRegister = async (
 ): Promise<void> => {
   try {
     const data = Object.assign({}, req.body) as KYCRegisterBody;
-    const hashedPassword = await generateHashedValue(data.user.password);
-    const hashedBankNumber = await generateHashedValue(
-      data.bankAccount.bankNumber
-    );
-    const hashedAccountNumber = await generateHashedValue(
-      data.bankAccount.accountNumber
-    );
-    const formatedExpirationDate = formatCardExpirationDate(
-      data.bankAccount.expirationDate
-    );
+
+    const [
+      hashedPassword,
+      hashedBankNumber,
+      hashedAccountNumber,
+      formatedExpirationDate,
+    ] = await Promise.all([
+      generateHashedValue(data.user.password),
+      generateHashedValue(data.bankAccount.bankNumber),
+      generateHashedValue(data.bankAccount.accountNumber),
+      formatCardExpirationDate(data.bankAccount.expirationDate),
+    ]);
 
     const user = await User.transaction(async trx => {
       const kycRegistration = await registerKycUser(
