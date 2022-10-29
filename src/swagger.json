@@ -148,6 +148,59 @@
           }
         }
       }
+    },
+    "/users/kyc-register": {
+      "post": {
+        "tags":[
+          "Users"
+        ],
+        "summary":"KYC Register",
+        "description":"Register user with KYC check",
+        "operationId":"kycRegister",
+        "requestBody":{
+          "description":"KYC Register",
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/KycRegisterBody"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "200":{
+            "description":"Successful operation - User registered",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/KycSuccessResponse"
+                }
+              }
+            }
+          },
+          "422":{
+            "description":"Unprocessable Entity",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components":{
@@ -377,10 +430,107 @@
             "example":{}
           }
         }
+      },
+      "KycRegisterBody": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string",
+                "example": "John"
+              },
+              "lastName": {
+                "type": "string",
+                "example": "Doe"
+              },
+              "username": {
+                "type": "string",
+                "example": "john.doe@example.com"
+              },
+              "password":{
+                "type":"string",
+                "example":"Iamstrong111!"
+              },
+              "confirmedPassword": {
+                "type": "string",
+                "example": "Iamstrong111!"
+              },
+              "phoneNumber": {
+                "type": "string",
+                "example": "(555) 555-1234"
+              },
+              "socialSecurityNumber": {
+                "type": "string",
+                "example": "111-22-3333"
+              }
+            }
+          },
+          "bankAccount": {
+            "type": "object",
+            "properties": {
+              "bankName": {
+                "type": "string",
+                "example": "Example Bank"
+              },
+              "bankNumber": {
+                "type": "string",
+                "example": "021000021"
+              },
+              "accountHolderName": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "accountNumber": {
+                "type": "string",
+                "example": "13719713158835300"
+              }
+            }
+          }
+        }
+      },
+      "KycSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "The request has been fulfilled, resulting in the creation of a new resource."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "username": {
+                "type": "string",
+                "example": "john.doe@example.com"
+              },
+              "firstName": {
+                "type": "string",
+                "example": "John"
+              },
+              "lastName": {
+                "type": "string",
+                "example": "Doe"
+              },
+              "phoneNumber": {
+                "type": "string",
+                "example": "(555) 555-1234"
+              }
+            }
+          }
+        }
       }
     }
   },
-  "requestBodies":{
+  "requestBodies": {
     "EligibilityCheckPayload":{
       "description":"Eligibility Check Payload",
       "content":{
@@ -397,6 +547,16 @@
         "application/json":{
           "schema":{
             "$ref":"#/components/schemas/EligibilityRegisterBody"
+          }
+        }
+      }
+    },
+    "KycRegisterBody": {
+      "description":"KYC Register Body",
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/KycRegisterBody"
           }
         }
       }
