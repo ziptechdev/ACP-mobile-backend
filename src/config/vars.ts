@@ -14,9 +14,7 @@ export const port = process.env.PORT as string;
 // Docker has problems with this format so it is commented out
 //export const dbUri = `postgres://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}
 //@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}` as string;
-export const testDbUri =
-  `postgres://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}
-@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.TEST_DATABASE_NAME}` as string;
+export const testDbUri = process.env.TEST_DB_URL as string;
 
 export const dbUri = process.env.DB_URL as string;
 

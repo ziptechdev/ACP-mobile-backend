@@ -485,6 +485,10 @@
               "accountNumber": {
                 "type": "string",
                 "example": "13719713158835300"
+              },
+              "expirationDate": {
+                "type": "string",
+                "example": "01/23"
               }
             }
           }
