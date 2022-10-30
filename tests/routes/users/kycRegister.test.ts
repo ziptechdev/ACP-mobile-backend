@@ -4,15 +4,13 @@ import {
   rollbackDb,
   seedDb,
   unseedDb,
+  assertErrorResponseWhenBodyKeyIsMissing,
+  assertErrorResponseWhenBodyValueDoesNotMatchValidation,
 } from '../../helpers';
 import { app, server } from '../../../src';
 import request from 'supertest';
 import { ErrorTypes } from '../../../src/config/constants';
 import httpStatus = require('http-status');
-import {
-  assertErrorResponseWhenBodyKeyIsMissing,
-  assertErrorResponseWhenBodyValueDoesNotMatchValidation,
-} from '../../helpers/functions';
 import { kycRegisterRequestBody } from '../../helpers/mocks/users/kycVerifiedUser';
 import { kycUserSerializedFields } from '../../../src/serializers/users/serializedFields';
 
