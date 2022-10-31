@@ -34,7 +34,7 @@ export const kycRegisterValidation = [
   body('user.phoneNumber').exists(),
   body('user.socialSecurityNumber')
     .exists()
-    .matches(/^(?!666|000|9\d{2})\d{3}(?!00)\d{2}(?!0{4})\d{4}$/)
+    .matches(/^(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$/)
     .custom(isExistingSocialSecurityNumberValidationRule),
   body('bankAccount').exists(),
   body('bankAccount.bankName').exists().isLength({ min: 3, max: 20 }),
