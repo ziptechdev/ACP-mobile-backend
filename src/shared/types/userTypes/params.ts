@@ -45,3 +45,7 @@ export interface BankAccountParams {
   accountNumber: string;
   expirationDate: string;
 }
+
+export interface EmailVerificationParams {
+  email: string;
+}
