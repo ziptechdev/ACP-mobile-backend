@@ -201,6 +201,59 @@
           }
         }
       }
+    },
+    "/users/verify-email": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User email verification",
+        "description": "Sends a random 5 digit code to users email",
+        "operationId": "verifyEmail",
+        "requestBody": {
+          "description": "Verify Email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses":{
+          "200":{
+            "description":"Successful operation - Verification Email sent",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/VerifyEmailSuccessResponse"
+                }
+              }
+            }
+          },
+          "422":{
+            "description":"Unprocessable Entity",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components":{
@@ -531,36 +584,35 @@
             }
           }
         }
-      }
-    }
-  },
-  "requestBodies": {
-    "EligibilityCheckPayload":{
-      "description":"Eligibility Check Payload",
-      "content":{
-        "application/json":{
-          "schema":{
-            "$ref":"#/components/schemas/EligibilityCheckPayload"
+      },
+      "VerifyEmailBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
           }
         }
-      }
-    },
-    "EligibilityRegisterBody":{
-      "description":"Eligibility Register Body",
-      "content":{
-        "application/json":{
-          "schema":{
-            "$ref":"#/components/schemas/EligibilityRegisterBody"
-          }
-        }
-      }
-    },
-    "KycRegisterBody": {
-      "description":"KYC Register Body",
-      "content":{
-        "application/json":{
-          "schema":{
-            "$ref":"#/components/schemas/KycRegisterBody"
+      },
+      "VerifyEmailSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Verification Email sent."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "verificationCode": {
+                "type": "number",
+                "example": 12345
+              }
+            }
           }
         }
       }

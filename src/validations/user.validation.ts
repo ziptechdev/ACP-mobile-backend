@@ -47,3 +47,9 @@ export const kycRegisterValidation = [
     .custom(isCardDateInTheFutureValidationRule),
   validateResult,
 ];
+
+// [POST] /api/v1/users/verify-email
+export const verifyEmailValidation = [
+  body('email').exists().isEmail(),
+  validateResult,
+];

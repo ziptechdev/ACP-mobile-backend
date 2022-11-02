@@ -20,3 +20,15 @@ export const dbUri = process.env.DB_URL as string;
 
 // Cors
 export const corsWhitelist = (process.env.CORS_WHITELIST as string)?.split(' ');
+
+// Mail
+export const mailConfig = {
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
+  auth: {
+    user: process.env.MAIL_USERNAME,
+    pass: process.env.MAIL_PASSWORD,
+  },
+};
+
+export const fromEmailAddress = process.env.MAIL_FROM_ADDRESS;

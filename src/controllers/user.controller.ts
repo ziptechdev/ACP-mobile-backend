@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { generateHashedValue } from '../utils/generateHash';
+import {
+  generateHashedValue,
+  generateRandomDigit,
+} from '../utils/dataGenerators';
 import { formatCardExpirationDate } from '../utils/date';
 import {
   registerEligibleUser,
@@ -18,11 +21,15 @@ import {
   KYCRegisterBody,
   KYCRegisterParams,
   BankAccountParams,
+  EmailVerificationParams,
 } from '../shared/types/userTypes/params';
 import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
 import { registerUserBankAccount } from '../services/db/bankAccounts.service';
 import User from '../models/User';
 import { httpResponse } from '../utils/httpResponse';
+import internal from 'stream';
+import { sendEmail } from '../mailer';
+import { fromEmailAddress } from '../config/vars';
 
 export const eligibilityRegister = async (
   req: Request,
@@ -95,6 +102,33 @@ export const kycRegister = async (
     //TODO: KYC Verification
 
     httpResponse(res, serializeKycUser(user), httpStatus.CREATED);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const verifyEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const data = Object.assign({}, req.body) as EmailVerificationParams;
+    const code = generateRandomDigit(5);
+
+    await sendEmail({
+      from: fromEmailAddress,
+      to: data.email,
+      subject: 'Email verification',
+      html: `<h2>${code}</h2>`,
+    });
+
+    httpResponse(
+      res,
+      { verificationCode: code },
+      httpStatus.OK,
+      'Verification Email sent.'
+    );
   } catch (error: any) {
     next(error);
   }
