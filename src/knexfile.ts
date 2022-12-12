@@ -41,13 +41,15 @@ const config = {
 
   production: {
     client: 'pg',
-    connection: dbUri,
+    connection: {
+      connectionString: dbUri,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
     pool: {
       min: 2,
       max: 10,
-    },
-    ssl: {
-      rejectUnauthorized: false,
     },
     migrations: {
       directory: __dirname + '/database/migrations',
