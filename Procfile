@@ -1,2 +1,2 @@
-release: yarn migrate:run
-web: node dist/index.js
+release: yarn migrate:run:prod
+web: yarn start
