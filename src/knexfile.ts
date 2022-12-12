@@ -46,6 +46,9 @@ const config = {
       min: 2,
       max: 10,
     },
+    ssl: {
+      rejectUnauthorized: false,
+    },
     migrations: {
       directory: __dirname + '/database/migrations',
       tableName: 'knex_migrations',
