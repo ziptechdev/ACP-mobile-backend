@@ -6,3 +6,4 @@ export const eligibilityCheckUrl = `${rootUrl}/national-verifier/eligibility-che
 export const eligibilityRegisterUrl = `${rootUrl}/users/eligibility-register/${eligibleUser.eligibilityCheckId}`;
 export const kycRegisterUrl = `${rootUrl}/users/kyc-register`;
 export const verifyEmailUrl = `${rootUrl}/users/verify-email`;
+export const loginUrl = `${rootUrl}/users/login`;

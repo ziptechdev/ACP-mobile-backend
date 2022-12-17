@@ -254,6 +254,69 @@
           }
         }
       }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User login",
+        "description": "Logs the user in",
+        "operationId": "userLogin",
+        "requestBody": {
+          "description": "User login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses":{
+          "200":{
+            "description":"User Authenticated",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/UserLoginSuccessResponse"
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422":{
+            "description":"Unprocessable Entity",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components":{
@@ -611,6 +674,65 @@
               "verificationCode": {
                 "type": "number",
                 "example": 12345
+              }
+            }
+          }
+        }
+      },
+      "UserLoginBody": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "UserLoginSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "User Authenticated"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "username":{
+                "type":"string",
+                "example":"john.doe@example.com"
+              },
+              "firstName":{
+                "type":"string",
+                "example":"John"
+              },
+              "middleName":{
+                "type":"string",
+                "example":"Mark"
+              },
+              "lastName":{
+                "type":"string",
+                "example":"Doe"
+              },
+              "phoneNumber":{
+                "type":"string",
+                "example":"123456789"
+              },
+              "token": {
+                "type": "string",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxMzE3MjcwLCJleHAiOjE2NzEzMTcyNzN9.RLcEyn5YPETEdFHqncBQN8n1hH9y4eoaNjbqKlJ0Bb0"
               }
             }
           }

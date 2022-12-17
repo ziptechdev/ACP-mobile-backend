@@ -1,7 +1,9 @@
 import User from '../../models/User';
 import {
+  authUserSerializedFields,
   eligibleUserSerializedFields,
   kycUserSerializedFields,
+  userSerializedFields,
 } from './serializedFields';
 import _ from 'lodash';
 
@@ -11,4 +13,12 @@ export const serializeEligibleUser = (user: User): Partial<User> => {
 
 export const serializeKycUser = (user: User): Partial<User> => {
   return _.pick(user, kycUserSerializedFields);
+};
+
+export const serializeUser = (user: User): Partial<User> => {
+  return _.pick(user, userSerializedFields);
+};
+
+export const serializeAuthUser = (user: User): Partial<User> => {
+  return _.pick(user, authUserSerializedFields);
 };

@@ -1,18 +1,19 @@
-export const eligibleUserSerializedFields = [
+export const userSerializedFields = [
   'id',
   'username',
   'firstName',
-  'lastName',
   'middleName',
+  'lastName',
+  'phoneNumber',
+];
+
+export const eligibleUserSerializedFields = [
+  ...userSerializedFields,
   'eligibilityCheckId',
   'applicationId',
   'eligibilityCheckStatus',
 ]; // add more fields if necessary
 
-export const kycUserSerializedFields = [
-  'id',
-  'username',
-  'firstName',
-  'lastName',
-  'phoneNumber',
-]; // TODO: add kyc id doc and selfie pic
+export const kycUserSerializedFields = [...userSerializedFields]; // TODO: add kyc id doc and selfie pic
+
+export const authUserSerializedFields = [...userSerializedFields, 'token'];

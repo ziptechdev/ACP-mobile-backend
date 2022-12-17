@@ -21,6 +21,7 @@ export default class User extends BaseModel {
   applicationId: string;
   eligibilityCheckStatus: string;
   count!: number;
+  token!: string;
 
   static get tableName(): string {
     return 'users';
