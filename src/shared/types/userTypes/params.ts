@@ -49,3 +49,8 @@ export interface BankAccountParams {
 export interface EmailVerificationParams {
   email: string;
 }
+
+export interface LoginParams {
+  username: string;
+  password: string;
+}

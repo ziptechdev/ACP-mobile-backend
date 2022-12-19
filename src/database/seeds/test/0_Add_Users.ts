@@ -34,7 +34,7 @@ export const seed = (knex: Knex): Promise<any> => {
       phoneNumber: '(111) 222-1234',
       socialSecurityNumber: '444-55-6666',
       username: 'kyc.registered@example.com',
-      password: '$2y$10$oNm.hHn/BGNdR7czd6XMdOoaUg/AAjjHeVIuVmAwzrRrVRF9EXZxe',
+      password: '$2b$10$XHD3zZeyoG5Kgp5gSAkSjusH1rJkRN422wzaUxcqSI7CR.GHEBgiK',
     },
   ]);
 };

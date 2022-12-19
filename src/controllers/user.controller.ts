@@ -5,6 +5,7 @@ import {
 } from '../utils/dataGenerators';
 import { formatCardExpirationDate } from '../utils/date';
 import {
+  loginUser,
   registerEligibleUser,
   registerKycUser,
 } from '../services/db/users.service';
@@ -22,12 +23,16 @@ import {
   KYCRegisterParams,
   BankAccountParams,
   EmailVerificationParams,
+  LoginParams,
 } from '../shared/types/userTypes/params';
-import { serializeEligibleUser, serializeKycUser } from '../serializers/users';
+import {
+  serializeAuthUser,
+  serializeEligibleUser,
+  serializeKycUser,
+} from '../serializers/users';
 import { registerUserBankAccount } from '../services/db/bankAccounts.service';
 import User from '../models/User';
 import { httpResponse } from '../utils/httpResponse';
-import internal from 'stream';
 import { sendEmail } from '../mailer';
 import { fromEmailAddress } from '../config/vars';
 
@@ -128,6 +133,26 @@ export const verifyEmail = async (
       { verificationCode: code },
       httpStatus.OK,
       'Verification Email sent.'
+    );
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const data = Object.assign({}, req.body) as LoginParams;
+    const user = await loginUser(data.username, data.password);
+
+    httpResponse(
+      res,
+      serializeAuthUser(user),
+      httpStatus.OK,
+      'User Authenticated'
     );
   } catch (error: any) {
     next(error);

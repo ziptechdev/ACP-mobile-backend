@@ -53,3 +53,9 @@ export const verifyEmailValidation = [
   body('email').exists().isEmail(),
   validateResult,
 ];
+
+export const loginValidation = [
+  body('username').exists(),
+  body('password').exists(),
+  validateResult,
+];

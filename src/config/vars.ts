@@ -31,4 +31,10 @@ export const mailConfig = {
   },
 };
 
+//jwt
+export const jwtConfig = {
+  secretKey: process.env.JWT_SECRET_KEY,
+  duration: process.env.JWT_DURATION,
+};
+
 export const fromEmailAddress = process.env.MAIL_FROM_ADDRESS;

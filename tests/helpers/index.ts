@@ -92,4 +92,8 @@ export const assertErrorResponseWhenBodyValueDoesNotMatchValidation = async <
   expect(res.body.error.type).toEqual(ErrorTypes.VALIDATION_ERROR);
 };
 
+// export const assertSuccessResponse = async (
+//
+// )
+
 export * from './endpoints';
