@@ -34,7 +34,8 @@ export const mailConfig = {
 //jwt
 export const jwtConfig = {
   secretKey: process.env.JWT_SECRET_KEY,
-  duration: process.env.JWT_DURATION,
+  duration: parseInt(process.env.JWT_DURATION),
+  sessionNumber: parseInt(process.env.JWT_PER_USER),
 };
 
 export const fromEmailAddress = process.env.MAIL_FROM_ADDRESS;
