@@ -11,6 +11,7 @@ import { serializeUser } from '../../serializers/users';
 import { HttpError } from '../../utils/httpError';
 import { ErrorTypes } from '../../config/constants';
 import { jwtConfig } from '../../config/vars';
+import UserTokens from '../../models/UserTokens';
 
 export const getUsersCount = async (): Promise<number> => {
   return (await User.query().count())[0].count;
@@ -47,7 +48,9 @@ export const loginUser = async (
   username: string,
   password: string
 ): Promise<User> => {
-  const user = await User.query().findOne({ username });
+  const user = await User.query()
+    .withGraphJoined('tokens')
+    .findOne({ username });
 
   if (!user || !(await compare(password, user.password))) {
     throw new HttpError(
@@ -59,9 +62,31 @@ export const loginUser = async (
 
   const jwt = require('jsonwebtoken');
 
-  user.token = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
+  user.tokens.forEach((userToken: UserTokens) => {
+    jwt.verify(
+      userToken.token,
+      jwtConfig.secretKey,
+      async function (error: Error | null, result: boolean) {
+        if (error) {
+          await userToken.$query().delete();
+        }
+      }
+    );
+  });
+
+  if (jwtConfig.sessionNumber <= user.tokens.length) {
+    throw new HttpError(400, 'Session limit exceeded', ErrorTypes.UNAUTHORIZED);
+  }
+
+  const generatedToken = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
     expiresIn: jwtConfig.duration,
   });
+
+  await user.$relatedQuery('tokens').insert({
+    token: generatedToken,
+  });
+
+  user.token = generatedToken;
 
   return user;
 };

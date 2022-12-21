@@ -65,6 +65,18 @@ describe('/login', () => {
       .expect(httpStatus.UNAUTHORIZED);
   });
 
+  test('should throw error on exceeded session number', async () => {
+    await request(app)
+      .post(loginUrl)
+      .send(loginRequestBody)
+      .expect(httpStatus.OK);
+
+    await request(app)
+      .post(loginUrl)
+      .send(loginRequestBody)
+      .expect(httpStatus.BAD_REQUEST);
+  });
+
   test('should successfully login user and serialize all fields correctly', async () => {
     const res = await request(app)
       .post(loginUrl)

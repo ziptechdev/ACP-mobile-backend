@@ -1,6 +1,7 @@
 import { JSONSchema, Model, RelationMappings } from 'objection';
 import BaseModel from './BaseModel';
 import BankAccount from './BankAccount';
+import UserTokens from './UserTokens';
 
 export default class User extends BaseModel {
   id!: number;
@@ -22,6 +23,7 @@ export default class User extends BaseModel {
   eligibilityCheckStatus: string;
   count!: number;
   token!: string;
+  tokens!: Array<UserTokens>;
 
   static get tableName(): string {
     return 'users';
@@ -47,6 +49,14 @@ export default class User extends BaseModel {
         join: {
           from: 'users.id',
           to: 'bank_accounts.user_id',
+        },
+      },
+      tokens: {
+        relation: Model.HasManyRelation,
+        modelClass: UserTokens,
+        join: {
+          from: 'users.id',
+          to: 'user_tokens.user_id',
         },
       },
     };
