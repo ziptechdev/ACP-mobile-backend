@@ -317,6 +317,58 @@
           }
         }
       }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User logout",
+        "description": "Logs the user out",
+        "operationId": "userLogout",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "requestBody": {
+          "description": "User logout",
+          "content": {},
+          "required": false
+        },
+        "responses":{
+          "200":{
+            "description":"User logged out",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/UserLogoutSuccessResponse"
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components":{
@@ -737,6 +789,30 @@
             }
           }
         }
+      },
+      "UserLogoutSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Token deleted!"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    },
+
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
