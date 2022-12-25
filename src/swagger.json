@@ -77,7 +77,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -131,7 +131,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/ValidationError"
                 }
               }
             }
@@ -141,7 +141,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -184,7 +184,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/ValidationError"
                 }
               }
             }
@@ -194,7 +194,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -237,7 +237,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/ValidationError"
                 }
               }
             }
@@ -247,7 +247,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -290,7 +290,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -300,7 +300,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/ValidationError"
                 }
               }
             }
@@ -310,7 +310,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -352,7 +352,7 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -362,7 +362,59 @@
             "content":{
               "application/json":{
                 "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
+                  "$ref":"#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/refresh-token": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Refresh token",
+        "description": "Refreshes the user session",
+        "operationId": "refreshToken",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "requestBody": {
+          "description": "Refresh token",
+          "content": {},
+          "required": false
+        },
+        "responses":{
+          "200":{
+            "description":"New token generated!",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/RefreshTokenSuccessResponse"
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/InternalServerError"
                 }
               }
             }
@@ -372,7 +424,7 @@
     }
   },
   "components":{
-    "schemas":{
+    "schemas": {
       "EligibilityCheckPayload":{
         "required":[
           "firstName",
@@ -438,29 +490,42 @@
         }
       },
       "EligibilityCheckSuccessResponsePendingCert": {
-        "type":"object",
-        "properties":{
-          "eligibilityCheckId":{
-            "type":"string",
-            "example": "12224332423423f3245234ertjlnmv3"
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
           },
-          "applicationId":{
-            "type":"string",
-            "example":"SDFBGD3"
-          },
-          "status":{
+          "message": {
             "type": "string",
-            "example":"PENDING_CERT"
+            "example": "Success"
           },
-          "_links":{
-            "type":"object",
-            "properties": {
-              "certification": {
-                "type": "object",
+          "data": {
+            "type": "object",
+            "properties":{
+              "eligibilityCheckId":{
+                "type":"string",
+                "example": "12224332423423f3245234ertjlnmv3"
+              },
+              "applicationId":{
+                "type":"string",
+                "example":"SDFBGD3"
+              },
+              "status":{
+                "type": "string",
+                "example":"PENDING_CERT"
+              },
+              "_links":{
+                "type":"object",
                 "properties": {
-                  "href": {
-                    "type": "string",
-                    "example": "carrierUrl.com"
+                  "certification": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "example": "carrierUrl.com"
+                      }
+                    }
                   }
                 }
               }
@@ -469,53 +534,66 @@
         }
       },
       "EligibilityCheckSuccessResponsePendingResolution": {
-        "type":"object",
-        "properties":{
-          "eligibilityCheckId":{
-            "type":"string",
-            "example": "12224332423423f3245234ertjlnmv3"
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
           },
-          "applicationId":{
-            "type":"string",
-            "example":"SDFBGD3"
-          },
-          "status":{
+          "message": {
             "type": "string",
-            "example":"PENDING_RESOLUTION"
+            "example": "Success"
           },
-          "failures":{
-            "type":"array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "eligibilityExpirationDate": {
-            "type":"string",
-            "example":"2023-01-01"
-          },
-          "lastManualReviewTime": {
-            "type":"string",
-            "example":"2023-01-01:05:05:05"
-          },
-          "numberofManualReview": {
-            "type":"string",
-            "example":"3"
-          },
-          "rejections":{
-            "type":"array",
-            "items": {
-              "type": "object"
-            }
-          },
-          "_links":{
-            "type":"object",
+          "data": {
+            "type": "object",
             "properties": {
-              "resolution": {
+              "eligibilityCheckId": {
+                "type": "string",
+                "example": "12224332423423f3245234ertjlnmv3"
+              },
+              "applicationId": {
+                "type": "string",
+                "example": "SDFBGD3"
+              },
+              "status": {
+                "type": "string",
+                "example": "PENDING_RESOLUTION"
+              },
+              "failures": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "eligibilityExpirationDate": {
+                "type": "string",
+                "example": "2023-01-01"
+              },
+              "lastManualReviewTime": {
+                "type": "string",
+                "example": "2023-01-01:05:05:05"
+              },
+              "numberofManualReview": {
+                "type": "string",
+                "example": "3"
+              },
+              "rejections": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "_links": {
                 "type": "object",
                 "properties": {
-                  "href": {
-                    "type": "string",
-                    "example": "www.url.com"
+                  "resolution": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "example": "www.url.com"
+                      }
+                    }
                   }
                 }
               }
@@ -542,39 +620,52 @@
         }
       },
       "EligibleUser": {
-        "type":"object",
-        "properties":{
-          "id":{
-            "type":"number",
-            "example": 1
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
           },
-          "username":{
-            "type":"string",
-            "example":"john.doe@example.com"
+          "message": {
+            "type": "string",
+            "example": "Success"
           },
-          "firstName":{
-            "type":"string",
-            "example":"John"
-          },
-          "lastName":{
-            "type":"string",
-            "example": "Doe"
-          },
-          "middleName":{
-            "type":"string",
-            "example": "Mark"
-          },
-          "eligibilityCheckId":{
-            "type":"string",
-            "example": "2323l4h2lk34n23"
-          },
-          "applicationId":{
-            "type":"string",
-            "example": "ewklrn3kl3n2"
-          },
-          "eligibilityCheckStatus":{
-            "type":"string",
-            "example": "PENDING_CERT"
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "username": {
+                "type": "string",
+                "example": "john.doe@example.com"
+              },
+              "firstName": {
+                "type": "string",
+                "example": "John"
+              },
+              "lastName": {
+                "type": "string",
+                "example": "Doe"
+              },
+              "middleName": {
+                "type": "string",
+                "example": "Mark"
+              },
+              "eligibilityCheckId": {
+                "type": "string",
+                "example": "2323l4h2lk34n23"
+              },
+              "applicationId": {
+                "type": "string",
+                "example": "ewklrn3kl3n2"
+              },
+              "eligibilityCheckStatus": {
+                "type": "string",
+                "example": "PENDING_CERT"
+              }
+            }
           }
         }
       },
@@ -783,8 +874,17 @@
                 "example":"123456789"
               },
               "token": {
-                "type": "string",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxMzE3MjcwLCJleHAiOjE2NzEzMTcyNzN9.RLcEyn5YPETEdFHqncBQN8n1hH9y4eoaNjbqKlJ0Bb0"
+                "type": "object",
+                "properties": {
+                  "access": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxOTg0NDIyLCJleHAiOjE2NzE5ODgwMjJ9.7NUbq8K5DZXCMYT8ov1mjhaBWDyWS086lbaxzO3MR7I"
+                  },
+                  "refresh": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxOTg0MzM3LCJleHAiOjE2NzIwNzA3Mzd9.Ma042i5_QdtqGH1BTdkDV6pteYHIOXekFLD26kMFQ8w"
+                  }
+                }
               }
             }
           }
@@ -803,6 +903,153 @@
           },
           "data": {
             "type": "object"
+          }
+        }
+      },
+      "InternalServerError": {
+        "type":"object",
+        "properties":{
+          "status":{
+            "type":"number",
+            "example": 500
+          },
+          "message":{
+            "type":"string",
+            "example":"Something went wrong"
+          },
+          "type":{
+            "type":"string",
+            "example":"INTERNAL_SERVER_ERROR"
+          },
+          "data":{
+            "type":"object",
+            "example":{}
+          }
+        }
+      },
+      "ValidationError": {
+        "type":"object",
+        "properties":{
+          "status":{
+            "type":"number",
+            "example": 422
+          },
+          "message":{
+            "type":"string",
+            "example":"Invalid value"
+          },
+          "type":{
+            "type":"string",
+            "example":"VALIDATION_ERROR"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "string",
+                      "example": "email"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email is required"
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "errors": [
+                {
+                  "field": "email",
+                  "message": "Email is required"
+                },
+                {
+                  "field": "password",
+                  "message": "Password is required"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type":"object",
+        "properties":{
+          "status":{
+            "type":"number",
+            "example": 401
+          },
+          "message":{
+            "type":"string",
+            "example":"Unauthorized: Invalid token"
+          },
+          "type":{
+            "type":"string",
+            "example":"UNAUTHORIZED"
+          },
+          "data":{
+            "type":"object",
+            "example":{}
+          }
+        }
+      },
+      "RefreshTokenSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "New token generated!"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "username":{
+                "type":"string",
+                "example":"john.doe@example.com"
+              },
+              "firstName":{
+                "type":"string",
+                "example":"John"
+              },
+              "middleName":{
+                "type":"string",
+                "example":"Mark"
+              },
+              "lastName":{
+                "type":"string",
+                "example":"Doe"
+              },
+              "phoneNumber":{
+                "type":"string",
+                "example":"123456789"
+              },
+              "token": {
+                "type": "object",
+                "properties": {
+                  "access": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxOTg0NDIyLCJleHAiOjE2NzE5ODgwMjJ9.7NUbq8K5DZXCMYT8ov1mjhaBWDyWS086lbaxzO3MR7I"
+                  },
+                  "refresh": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxOTg0MzM3LCJleHAiOjE2NzIwNzA3Mzd9.Ma042i5_QdtqGH1BTdkDV6pteYHIOXekFLD26kMFQ8w"
+                  }
+                }
+              }
+            }
           }
         }
       }

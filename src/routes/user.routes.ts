@@ -26,7 +26,7 @@ router.post(
 router.post('/kyc-register', kycRegisterValidation, kycRegister);
 router.post('/verify-email', verifyEmailValidation, verifyEmail);
 router.post('/login', loginValidation, login);
-router.get('/refresh-token', verifyRefreshToken, refreshToken);
+router.post('/refresh-token', verifyRefreshToken, refreshToken);
 router.post('/logout', verifyAccessToken, logout);
 
 export default router;

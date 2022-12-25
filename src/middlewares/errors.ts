@@ -34,7 +34,7 @@ export const errorHandler = (
 
   logger.error(err);
 
-  res.status(err.status).send({ error: response });
+  res.status(err.status).send(response);
 };
 
 export const errorConverter = (
