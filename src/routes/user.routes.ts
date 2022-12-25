@@ -3,6 +3,8 @@ import {
   eligibilityRegister,
   kycRegister,
   login,
+  logout,
+  refreshToken,
   verifyEmail,
 } from '../controllers/user.controller';
 import {
@@ -11,6 +13,7 @@ import {
   loginValidation,
   verifyEmailValidation,
 } from '../validations/user.validation';
+import { verifyAccessToken, verifyRefreshToken } from '../middlewares/jwt';
 
 const router = Router();
 
@@ -23,5 +26,7 @@ router.post(
 router.post('/kyc-register', kycRegisterValidation, kycRegister);
 router.post('/verify-email', verifyEmailValidation, verifyEmail);
 router.post('/login', loginValidation, login);
+router.get('/refresh-token', verifyRefreshToken, refreshToken);
+router.post('/logout', verifyAccessToken, logout);
 
 export default router;

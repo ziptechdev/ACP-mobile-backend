@@ -13,6 +13,15 @@ import {
 } from './middlewares/errors';
 import { corsOptions } from './config/cors';
 
+import User from './models/User';
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    user: Partial<User>;
+    token: string;
+  }
+}
+
 // Create a new express application instance
 const app = express();
 

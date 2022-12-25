@@ -6,6 +6,8 @@ import {
 import { formatCardExpirationDate } from '../utils/date';
 import {
   loginUser,
+  logoutUser,
+  refreshUserToken,
   registerEligibleUser,
   registerKycUser,
 } from '../services/db/users.service';
@@ -52,7 +54,7 @@ export const eligibilityRegister = async (
         eligibilityRegisterWhiteListedParams
       )
     );
-    httpResponse(res, serializeEligibleUser(user), httpStatus.OK);
+    httpResponse(res, serializeEligibleUser(user), httpStatus.CREATED);
   } catch (error: any) {
     next(error);
   }
@@ -151,9 +153,42 @@ export const login = async (
     httpResponse(
       res,
       serializeAuthUser(user),
-      httpStatus.OK,
+      httpStatus.CREATED,
       'User Authenticated'
     );
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = await refreshUserToken(req.user, req.token);
+
+    httpResponse(
+      res,
+      serializeAuthUser(user),
+      httpStatus.CREATED,
+      'New token generated!'
+    );
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await logoutUser(req.user.id, req.token);
+
+    httpResponse(res, {}, httpStatus.CREATED, 'Token deleted!');
   } catch (error: any) {
     next(error);
   }

@@ -64,9 +64,9 @@ export const loginUser = async (
 
   user.tokens.forEach((userToken: UserTokens) => {
     jwt.verify(
-      userToken.token,
+      userToken.refresh,
       jwtConfig.secretKey,
-      async function (error: Error | null, result: boolean) {
+      async function (error: Error | null) {
         if (error) {
           await userToken.$query().delete();
         }
@@ -78,15 +78,56 @@ export const loginUser = async (
     throw new HttpError(400, 'Session limit exceeded', ErrorTypes.UNAUTHORIZED);
   }
 
-  const generatedToken = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
-    expiresIn: jwtConfig.duration,
+  const accessToken = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
+    expiresIn: jwtConfig.accessTokenDuration,
+  });
+
+  const refreshToken = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
+    expiresIn: jwtConfig.refreshTokenDuration,
   });
 
   await user.$relatedQuery('tokens').insert({
-    token: generatedToken,
+    access: accessToken,
+    refresh: refreshToken,
   });
 
-  user.token = generatedToken;
+  user.token = {
+    access: accessToken,
+    refresh: refreshToken,
+  };
 
   return user;
+};
+
+export const refreshUserToken = async (
+  user: Partial<User>,
+  refreshToken: string
+): Promise<Partial<User>> => {
+  const jwt = require('jsonwebtoken');
+
+  const accessToken = jwt.sign(serializeUser(user), jwtConfig.secretKey, {
+    expiresIn: jwtConfig.accessTokenDuration,
+  });
+
+  await UserTokens.query()
+    .where('userId', '=', user.id)
+    .where('refresh', '=', refreshToken)
+    .patch({ access: accessToken });
+
+  user.token = {
+    access: accessToken,
+    refresh: refreshToken,
+  };
+
+  return user;
+};
+
+export const logoutUser = async (
+  userId: number,
+  accessToken: string
+): Promise<void> => {
+  await UserTokens.query()
+    .where('userId', '=', userId)
+    .where('access', '=', accessToken)
+    .delete();
 };

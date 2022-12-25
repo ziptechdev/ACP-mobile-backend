@@ -22,7 +22,7 @@ export default class User extends BaseModel {
   applicationId: string;
   eligibilityCheckStatus: string;
   count!: number;
-  token!: string;
+  token!: { access: string; refresh: string };
   tokens!: Array<UserTokens>;
 
   static get tableName(): string {

@@ -8,17 +8,11 @@ export default class UserTokens extends BaseModel {
   }
 
   id!: number;
-  token: string;
+  refresh: string;
+  access: string;
   userId!: number;
   createdAt!: string;
   updatedAt!: string;
-
-  static get jsonSchema(): JSONSchema {
-    return {
-      type: 'object',
-      required: ['token'],
-    };
-  }
 
   static get relationMappings(): RelationMappings {
     return {
