@@ -3,15 +3,13 @@ import httpStatus from 'http-status';
 import {
   eligibilityCheckPayload,
   eligibilityCheckSuccessResponsePendingCert,
-  NvError,
-  NvValidationError,
 } from '../shared/types/nationalVerifierTypes';
 import { eligibilityCheckSuccessResponseMock } from '../shared/mocks/nationalVerifier/eligibilityCheckMocks';
-import { labelNvError } from '../utils/labelNvError';
 import { filterParams } from '../shared/types';
 import { CreateEligibleUserParams } from '../shared/types/userTypes/params';
 import { createEligibleUserWhiteListedParams } from '../shared/types/userTypes/whiteListedParams';
 import { findOrCreateEligibleUser } from '../services/db/users.service';
+import { httpResponse } from '../utils/httpResponse';
 
 export const eligibilityCheck = async (
   req: Request,
@@ -39,9 +37,11 @@ export const eligibilityCheck = async (
         createEligibleUserWhiteListedParams
       )
     );
-    res
-      .status(httpStatus.OK)
-      .json(response as eligibilityCheckSuccessResponsePendingCert);
+    httpResponse(
+      res,
+      response as eligibilityCheckSuccessResponsePendingCert,
+      httpStatus.OK
+    );
   } catch (error: any) {
     // somehow try to figure out from the error format if it came from the external api and label it if it has
     // so it is formatted correctly in the error handler

@@ -15,10 +15,10 @@ export const serializeKycUser = (user: User): Partial<User> => {
   return _.pick(user, kycUserSerializedFields);
 };
 
-export const serializeUser = (user: User): Partial<User> => {
+export const serializeUser = (user: Partial<User>): Partial<User> => {
   return _.pick(user, userSerializedFields);
 };
 
-export const serializeAuthUser = (user: User): Partial<User> => {
+export const serializeAuthUser = (user: Partial<User>): Partial<User> => {
   return _.pick(user, authUserSerializedFields);
 };
