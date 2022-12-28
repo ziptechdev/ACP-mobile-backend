@@ -37,6 +37,7 @@ import User from '../models/User';
 import { httpResponse } from '../utils/httpResponse';
 import { sendEmail } from '../mailer';
 import { fromEmailAddress } from '../config/vars';
+import { verifyIndentiy } from '../services/api/jumio.service';
 
 export const eligibilityRegister = async (
   req: Request,
@@ -80,35 +81,36 @@ export const kycRegister = async (
       formatCardExpirationDate(data.bankAccount.expirationDate),
     ]);
 
-    const user = await User.transaction(async trx => {
-      const kycRegistration = await registerKycUser(
-        trx,
-        filterParams<KYCRegisterParams>(
-          { ...data.user, password: hashedPassword },
-          kycRegisterUserWhiteListedParams
-        )
-      );
-
-      await registerUserBankAccount(
-        trx,
-        kycRegistration,
-        filterParams<BankAccountParams>(
-          {
-            ...data.bankAccount,
-            bankNumber: hashedBankNumber,
-            accountNumber: hashedAccountNumber,
-            expirationDate: formatedExpirationDate,
-          },
-          kycRegisterBankAccountWhiteListedParams
-        )
-      );
-
-      return kycRegistration;
-    });
+    // const user = await User.transaction(async trx => {
+    //   const kycRegistration = await registerKycUser(
+    //     trx,
+    //     filterParams<KYCRegisterParams>(
+    //       { ...data.user, password: hashedPassword },
+    //       kycRegisterUserWhiteListedParams
+    //     )
+    //   );
+    //
+    //   await registerUserBankAccount(
+    //     trx,
+    //     kycRegistration,
+    //     filterParams<BankAccountParams>(
+    //       {
+    //         ...data.bankAccount,
+    //         bankNumber: hashedBankNumber,
+    //         accountNumber: hashedAccountNumber,
+    //         expirationDate: formatedExpirationDate,
+    //       },
+    //       kycRegisterBankAccountWhiteListedParams
+    //     )
+    //   );
+    //
+    //   return kycRegistration;
+    // });
 
     //TODO: KYC Verification
+    await verifyIndentiy();
 
-    httpResponse(res, serializeKycUser(user), httpStatus.CREATED);
+    httpResponse(res, {}, httpStatus.CREATED);
   } catch (error: any) {
     next(error);
   }
