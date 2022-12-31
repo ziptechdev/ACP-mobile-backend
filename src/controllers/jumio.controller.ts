@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { verifyIndentiy } from '../services/api/jumio.service';
+import { startIndentityVerification } from '../services/api/jumio.service';
 import { httpResponse } from '../utils/httpResponse';
 import httpStatus from 'http-status';
 
@@ -9,9 +9,9 @@ export const ResidentIdentityVerification = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const response = await verifyIndentiy(req);
-
-    httpResponse(res, {}, httpStatus.CREATED);
+    const data = await startIndentityVerification(req);
+    console.log(data);
+    httpResponse(res, data, httpStatus.CREATED);
   } catch (error: any) {
     next(error);
   }

@@ -7,16 +7,40 @@ import {
   jumioAccountPayload,
   jumioAccountSuccessResponse,
 } from '../../shared/types/jumoTypes/accountTypes';
-import { UserConsent } from '../../shared/types/jumoTypes/sharedTypes';
-import { request } from '../../utils/request';
+import {
+  UserConsent,
+  VerificationProccessRejectedReasson,
+  WorkflowCapabilityType,
+  WorkflowExecutionCredential,
+} from '../../shared/types/jumoTypes/sharedTypes';
+import { sendRequest } from '../../utils/request';
 import { generateHashedValue } from '../../utils/dataGenerators';
 import { Request } from 'express';
 import { ResidentIdentityVerificationBody } from '../../shared/types/jumoTypes/residentIdentityVerification';
 import { parseFileBufferFromRequest } from '../../utils/file';
 import { WorkflowExecutionResponse } from '../../shared/types/jumoTypes/workflowExecutionTypes';
 import { Readable } from 'stream';
+import JumioVerificationProcesses from '../../models/JumioVerificationProcesses';
+import { WorkflowDetails } from '../../shared/types/jumoTypes/workflowDetailsTypes';
+import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
 
-export const verifyIndentiy = async (request: Request): Promise<void> => {
+export const getUserJumioVerificationProcess = async (
+  username: string
+): Promise<JumioVerificationProcesses> => {
+  return JumioVerificationProcesses.query().findOne({ username });
+};
+
+export const deleteUserJumioVerificationProcess = async (
+  username: string
+): Promise<void> => {
+  await JumioVerificationProcesses.query()
+    .where('username', '=', username)
+    .delete();
+};
+
+export const startIndentityVerification = async (
+  request: Request
+): Promise<WorkflowExecutionResponse> => {
   const data = Object.assign(
     {},
     request.body
@@ -48,13 +72,13 @@ export const verifyIndentiy = async (request: Request): Promise<void> => {
     token.access_token
   );
 
-  let response: WorkflowExecutionResponse;
+  let idDocumentUploadResponse: WorkflowExecutionResponse;
 
   for (const credential of accountDetails.workflowExecution.credentials) {
     if (!credential.hasOwnProperty('api')) continue;
 
     for (const key in credential.api.parts) {
-      response = await sendIdImage(
+      idDocumentUploadResponse = await sendIdImage(
         credential.api.parts[key],
         credential.api.token,
         data.idImages[key]
@@ -62,7 +86,91 @@ export const verifyIndentiy = async (request: Request): Promise<void> => {
     }
   }
 
-  console.log(response);
+  const response: WorkflowExecutionResponse = await sendRequest(
+    'put',
+    idDocumentUploadResponse.api.workflowExecution,
+    {},
+    {},
+    idDocumentUploadResponse.api.token
+  );
+
+  await JumioVerificationProcesses.query().insert({
+    accountId: response.account.id,
+    workflowExecutionId: response.workflowExecution.id,
+    username: data.username,
+    token: token.access_token,
+  });
+
+  return response;
+};
+
+export const getVerificationProcessStatus = async (
+  accountId: string,
+  workflowId: string,
+  token: string
+): Promise<VerificationProcessStatus> => {
+  const workflowDetails: WorkflowDetails = await sendRequest(
+    'get',
+    `https://retrieval.amer-1.jumio.ai/api/v1/accounts/${accountId}/workflow-executions/${workflowId}`,
+    {},
+    {},
+    token
+  );
+
+  const verificationProccessStatus: VerificationProcessStatus = {
+    status: 'REJECTED',
+    reasons: [] as Array<VerificationProccessRejectedReasson>,
+  };
+
+  switch (workflowDetails.workflow.status) {
+    case 'INITIATED':
+      verificationProccessStatus.status = 'PENDING';
+      break;
+    case 'ACQUIRED':
+      verificationProccessStatus.status = 'PENDING';
+      break;
+    case 'PROCESSED':
+      verificationProccessStatus.status = 'PASSED';
+      break;
+    case 'SESSION_EXPIRED':
+      verificationProccessStatus.status = 'EXPIRED';
+      break;
+    case 'TOKEN_EXPIRED':
+      verificationProccessStatus.status = 'EXPIRED';
+      break;
+  }
+
+  if (workflowDetails.workflow.status !== 'PROCESSED') {
+    return verificationProccessStatus;
+  }
+
+  let criteria: keyof typeof workflowDetails.capabilities;
+  for (criteria in workflowDetails.capabilities) {
+    if (criteria === 'liveness') continue;
+
+    workflowDetails.capabilities[criteria].forEach(
+      (verificationType: WorkflowCapabilityType) => {
+        const hasFacemapCredential = verificationType.credentials.every(
+          (credential: WorkflowExecutionCredential) => {
+            return credential.category === 'FACEMAP';
+          }
+        );
+
+        if (hasFacemapCredential) return;
+
+        if (verificationType.decision.type !== 'PASSED') {
+          verificationProccessStatus.status = 'REJECTED';
+          verificationProccessStatus.reasons.push({
+            criteria: criteria,
+            credentials: verificationType.credentials,
+            lable: `${verificationType.decision.type} ${verificationType.decision.details.label}`,
+          });
+        }
+      }
+    );
+  }
+
+  return verificationProccessStatus;
 };
 
 const jumioAuth = async (): Promise<jumioAuthSuccessResponse> => {
@@ -74,7 +182,7 @@ const jumioAuth = async (): Promise<jumioAuthSuccessResponse> => {
     auth: jumioCredentials,
   };
 
-  return await request(
+  return await sendRequest(
     'post',
     'https://auth.amer-1.jumio.ai/oauth2/token',
     payload,
@@ -112,7 +220,7 @@ const jumioAccountCreate = async (
     },
   };
 
-  return await request(
+  return await sendRequest(
     'post',
     'https://account.amer-1.jumio.ai/api/v1/accounts',
     payload,
@@ -144,5 +252,5 @@ const sendIdImage = async (
     },
   };
 
-  return await request('post', url, data, config, accessToken);
+  return await sendRequest('post', url, data, config, accessToken);
 };

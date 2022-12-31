@@ -2,6 +2,7 @@ import { JSONSchema, Model, RelationMappings } from 'objection';
 import BaseModel from './BaseModel';
 import BankAccount from './BankAccount';
 import UserTokens from './UserTokens';
+import JumioVerificationProcesses from './JumioVerificationProcesses';
 
 export default class User extends BaseModel {
   id!: number;
@@ -57,6 +58,14 @@ export default class User extends BaseModel {
         join: {
           from: 'users.id',
           to: 'user_tokens.user_id',
+        },
+      },
+      jumioVerificationProcess: {
+        relation: Model.HasOneRelation,
+        modelClass: JumioVerificationProcesses,
+        join: {
+          from: 'users.username',
+          to: 'jumio_verification_processes.username',
         },
       },
     };

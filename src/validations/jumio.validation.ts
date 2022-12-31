@@ -3,6 +3,7 @@ import { isValidJumioIdScanImageValidationRule } from './rules/isValidJumioIdSca
 import { validateResult } from './validateResult';
 import { FileFilterCallback } from 'multer';
 import sharp, { Metadata } from 'sharp';
+import { jumioUserVerificationProcessCheck } from './rules/jumioUserVerificationProcessCheck';
 
 const multer = require('multer');
 const upload = multer({
@@ -41,7 +42,10 @@ export const jumioIdDocumentsVerification = [
   // check('selfie')
   //     .exists()
   //     .custom(isValidJumioIdScanImageValidationRule),
-  check('username').exists().isEmail(),
+  check('username')
+    .exists()
+    .isEmail()
+    .custom(jumioUserVerificationProcessCheck),
   check('userIp').exists(),
   check('userState').exists(),
   check('consentOptained')

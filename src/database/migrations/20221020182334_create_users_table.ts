@@ -5,8 +5,6 @@ import { EligibilityCheckStatus } from '../../models/EligibilityCheckStatus';
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('users', (table: CreateTableBuilder) => {
     table.increments('id').primary().unsigned();
-
-    //TODO implement enum
     table.tinyint('kyc_status').nullable().defaultTo(null);
     table.string('eligibility_check_id').unique().nullable().defaultTo(null);
     table.string('application_id').unique().nullable().defaultTo(null);

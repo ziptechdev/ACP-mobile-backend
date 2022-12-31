@@ -51,6 +51,14 @@ export type WorkflowExecutionStatus =
 
 export type ImageUploadApiParts = 'front' | 'back' | 'face';
 
+export type VerificationProcessCriteria =
+  | 'extraction'
+  | 'similarity'
+  | 'dataChecks'
+  | 'imageChecks'
+  | 'usability'
+  | 'liveness';
+
 export interface IdAndIndentityVerification {
   key: 3;
   credentials: Array<{
@@ -132,4 +140,10 @@ export interface WorkflowCapabilityType {
     predictedAge: number;
     ageConfidenceRange: string;
   };
+}
+
+export interface VerificationProccessRejectedReasson {
+  criteria: VerificationProcessCriteria;
+  credentials: Array<WorkflowExecutionCredential>;
+  lable: string;
 }

@@ -37,7 +37,6 @@ import User from '../models/User';
 import { httpResponse } from '../utils/httpResponse';
 import { sendEmail } from '../mailer';
 import { fromEmailAddress } from '../config/vars';
-import { verifyIndentiy } from '../services/api/jumio.service';
 
 export const eligibilityRegister = async (
   req: Request,

@@ -3,18 +3,18 @@ import { RequestMethod } from '../shared/types/request';
 
 type AxiosResponseData<T> = T;
 
-export async function request<T>(
+export async function sendRequest<T>(
   method: RequestMethod,
   url: string,
   data: object | string,
-  config: AxiosRequestConfig,
+  config: AxiosRequestConfig = {},
   token: string | null = null
 ): Promise<AxiosResponseData<T>> {
   const configWithAddedHeaders = {
     ...config,
     headers: {
       Accept: 'application/json',
-      ...config.headers,
+      ...(config.headers ?? {}),
     } as Record<string, any>,
   };
 
@@ -27,7 +27,7 @@ export async function request<T>(
       .request({ url, method, data, ...configWithAddedHeaders })
       .then(response => resolve(response.data as T))
       .catch((error: AxiosError<string>) => {
-        //console.log(error);
+        console.log(error);
         reject(error);
       });
   });

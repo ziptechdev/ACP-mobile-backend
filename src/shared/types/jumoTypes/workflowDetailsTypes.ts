@@ -21,7 +21,7 @@ export interface WorkflowDetails {
   capabilities: {
     extraction: Array<WorkflowCapabilityType>;
     similarity: Array<WorkflowCapabilityType>;
-    liveness: Array<WorkflowCapabilityType>;
+    liveness?: Array<WorkflowCapabilityType>;
     dataChecks: Array<WorkflowCapabilityType>;
     imageChecks: Array<WorkflowCapabilityType>;
     usability: Array<WorkflowCapabilityType>;
