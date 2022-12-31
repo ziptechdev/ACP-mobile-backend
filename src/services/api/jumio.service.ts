@@ -10,30 +10,59 @@ import {
 import { UserConsent } from '../../shared/types/jumoTypes/sharedTypes';
 import { request } from '../../utils/request';
 import { generateHashedValue } from '../../utils/dataGenerators';
+import { Request } from 'express';
+import { ResidentIdentityVerificationBody } from '../../shared/types/jumoTypes/residentIdentityVerification';
+import { parseFileBufferFromRequest } from '../../utils/file';
+import { WorkflowExecutionResponse } from '../../shared/types/jumoTypes/workflowExecutionTypes';
+import { Readable } from 'stream';
 
-export const verifyIndentiy = async (): Promise<void> => {
-  //TODO remove later, used for testing only
+export const verifyIndentiy = async (request: Request): Promise<void> => {
+  const data = Object.assign(
+    {},
+    request.body
+  ) as ResidentIdentityVerificationBody;
+
+  data.idImages = {
+    front: parseFileBufferFromRequest(request, 'documentIdFront'),
+    back: parseFileBufferFromRequest(request, 'documentIdBack'),
+    face: parseFileBufferFromRequest(request, 'selfie'),
+  };
+
   const userConsent = {
-    userIp: '192.168.0.1',
+    userIp: data.userIp,
     userLocation: {
       country: 'USA',
-      state: 'IL',
+      state: data.userState,
     },
 
     consent: {
-      obtained: 'yes',
-      obtainedAt: '2022-12-28T11:20:35.000Z',
+      obtained: data.consentOptained,
+      obtainedAt: data.consentOptainedAt,
     },
-  };
+  } as UserConsent;
 
   const token = await jumioAuth();
   const accountDetails = await jumioAccountCreate(
     userConsent,
-    'john.doe@example1.com',
+    data.username,
     token.access_token
   );
 
-  console.log(accountDetails);
+  let response: WorkflowExecutionResponse;
+
+  for (const credential of accountDetails.workflowExecution.credentials) {
+    if (!credential.hasOwnProperty('api')) continue;
+
+    for (const key in credential.api.parts) {
+      response = await sendIdImage(
+        credential.api.parts[key],
+        credential.api.token,
+        data.idImages[key]
+      );
+    }
+  }
+
+  console.log(response);
 };
 
 const jumioAuth = async (): Promise<jumioAuthSuccessResponse> => {
@@ -90,4 +119,30 @@ const jumioAccountCreate = async (
     config,
     accessToken
   );
+};
+
+const sendIdImage = async (
+  url: string,
+  accessToken: string,
+  image: any
+): Promise<WorkflowExecutionResponse> => {
+  const FormData = require('form-data');
+  const data = new FormData();
+
+  const stream = new Readable({
+    read() {
+      this.push(image.buffer);
+      this.push(null);
+    },
+  });
+
+  data.append('file', stream, image.originalname);
+
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  return await request('post', url, data, config, accessToken);
 };

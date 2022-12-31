@@ -6,7 +6,7 @@ type AxiosResponseData<T> = T;
 export async function request<T>(
   method: RequestMethod,
   url: string,
-  data: object,
+  data: object | string,
   config: AxiosRequestConfig,
   token: string | null = null
 ): Promise<AxiosResponseData<T>> {
@@ -27,7 +27,7 @@ export async function request<T>(
       .request({ url, method, data, ...configWithAddedHeaders })
       .then(response => resolve(response.data as T))
       .catch((error: AxiosError<string>) => {
-        console.log(error);
+        //console.log(error);
         reject(error);
       });
   });

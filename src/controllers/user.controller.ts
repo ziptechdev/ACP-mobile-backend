@@ -108,7 +108,6 @@ export const kycRegister = async (
     // });
 
     //TODO: KYC Verification
-    await verifyIndentiy();
 
     httpResponse(res, {}, httpStatus.CREATED);
   } catch (error: any) {

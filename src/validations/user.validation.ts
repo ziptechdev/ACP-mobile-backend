@@ -54,6 +54,7 @@ export const verifyEmailValidation = [
   validateResult,
 ];
 
+// [POST] /api/v1/users/login
 export const loginValidation = [
   body('username').exists(),
   body('password').exists(),

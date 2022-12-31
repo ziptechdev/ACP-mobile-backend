@@ -49,6 +49,8 @@ export type WorkflowExecutionStatus =
   | 'KYX_SESSION_EXPIRED'
   | 'KYX_TOKEN_EXPIRED';
 
+export type ImageUploadApiParts = 'front' | 'back' | 'face';
+
 export interface IdAndIndentityVerification {
   key: 3;
   credentials: Array<{
@@ -81,6 +83,7 @@ export interface WorkflowExecutionCredential {
   api?: {
     token: string;
     parts: {
+      [key: string]: string;
       front?: 'string';
       back?: 'string';
       face?: 'string';
