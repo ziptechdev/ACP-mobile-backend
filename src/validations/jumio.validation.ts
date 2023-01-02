@@ -1,8 +1,10 @@
 import { body, check } from 'express-validator';
 import { validateResult } from './validateResult';
+import { NextFunction, Request, Response } from 'express';
 import { FileFilterCallback } from 'multer';
 import sharp, { Metadata } from 'sharp';
 import { jumioUserVerificationProcessCheck } from './rules/jumioUserVerificationProcessCheck';
+import { parseFileBufferFromRequest } from '../utils/file';
 
 const multer = require('multer');
 const upload = multer({

@@ -14,6 +14,7 @@ import { HttpError } from '../utils/httpError';
 import logger from '../config/logger';
 import { ErrorTypes } from '../config/constants';
 import httpStatus from 'http-status';
+import { MulterError } from 'multer';
 
 export const errorHandler = (
   err: HttpError,
@@ -127,6 +128,12 @@ export const errorConverter = (
       err.message,
       ErrorTypes.NV_INTERNAL_ERROR,
       { links: err.links }
+    );
+  } else if (err instanceof MulterError) {
+    convertedError = new HttpError(
+      422,
+      `${err.message} ${err.field}`,
+      ErrorTypes.VALIDATION_ERROR
     );
   } else if (!(err instanceof HttpError)) {
     convertedError = new HttpError(
