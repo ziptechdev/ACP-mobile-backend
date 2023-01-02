@@ -147,3 +147,9 @@ export interface VerificationProccessRejectedReasson {
   credentials: Array<WorkflowExecutionCredential>;
   lable: string;
 }
+
+export interface VerificationProcessParameters {
+  username?: string;
+  accountId?: string;
+  workflowExecutionId?: string;
+}

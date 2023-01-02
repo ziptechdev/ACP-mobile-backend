@@ -9,9 +9,9 @@ export const jumioUserVerificationProcessCheck: CustomValidator = async (
   value,
   { req }
 ) => {
-  const validationProcess = await getUserJumioVerificationProcess(
-    req.body.username
-  );
+  const validationProcess = await getUserJumioVerificationProcess({
+    username: req.body.username,
+  });
 
   if (!validationProcess) {
     return;

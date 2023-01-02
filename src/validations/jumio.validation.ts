@@ -1,5 +1,4 @@
-import { check } from 'express-validator';
-import { isValidJumioIdScanImageValidationRule } from './rules/isValidJumioIdScanImage.validationRule';
+import { body, check } from 'express-validator';
 import { validateResult } from './validateResult';
 import { FileFilterCallback } from 'multer';
 import sharp, { Metadata } from 'sharp';
@@ -33,15 +32,6 @@ export const jumioIdDocumentsVerification = [
     { name: 'documentIdBack' },
     { name: 'selfie' },
   ]),
-  // check('documentIdFront')
-  //     .exists()
-  //     .custom(isValidJumioIdScanImageValidationRule),
-  // check('documentIdBack')
-  //     .exists()
-  //     .custom(isValidJumioIdScanImageValidationRule),
-  // check('selfie')
-  //     .exists()
-  //     .custom(isValidJumioIdScanImageValidationRule),
   check('username')
     .exists()
     .isEmail()
@@ -54,4 +44,16 @@ export const jumioIdDocumentsVerification = [
     .matches(/^(yes|no|na)$/),
   check('consentOptainedAt').exists(),
   validateResult,
+];
+
+//[POST] /api/v1/jumio/callback
+export const jumioCallbackValidation = [
+  body('callbackSentAt').exists(),
+  body('workflowExecution').exists(),
+  body('workflowExecution.id').exists(),
+  body('workflowExecution.href').exists(),
+  body('workflowExecution.definitionKey').exists(),
+  body('workflowExecution.status').exists(),
+  body('account').exists(),
+  body('account.id'),
 ];

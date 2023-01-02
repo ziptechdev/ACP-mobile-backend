@@ -1,6 +1,12 @@
 import { Router } from 'express';
-import { jumioIdDocumentsVerification } from '../validations/jumio.validation';
-import { ResidentIdentityVerification } from '../controllers/jumio.controller';
+import {
+  jumioCallbackValidation,
+  jumioIdDocumentsVerification,
+} from '../validations/jumio.validation';
+import {
+  jumioCallback,
+  ResidentIdentityVerification,
+} from '../controllers/jumio.controller';
 
 const router = Router();
 
@@ -9,5 +15,7 @@ router.post(
   jumioIdDocumentsVerification,
   ResidentIdentityVerification
 );
+
+router.post('/callback', jumioCallbackValidation, jumioCallback);
 
 export default router;

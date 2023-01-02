@@ -10,6 +10,7 @@ import {
 import {
   UserConsent,
   VerificationProccessRejectedReasson,
+  VerificationProcessParameters,
   WorkflowCapabilityType,
   WorkflowExecutionCredential,
 } from '../../shared/types/jumoTypes/sharedTypes';
@@ -24,10 +25,16 @@ import JumioVerificationProcesses from '../../models/JumioVerificationProcesses'
 import { WorkflowDetails } from '../../shared/types/jumoTypes/workflowDetailsTypes';
 import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
 
-export const getUserJumioVerificationProcess = async (
+export const getUserJumioVerificationProcessByUsername = async (
   username: string
 ): Promise<JumioVerificationProcesses> => {
   return JumioVerificationProcesses.query().findOne({ username });
+};
+
+export const getUserJumioVerificationProcess = async (
+  params: VerificationProcessParameters
+): Promise<JumioVerificationProcesses> => {
+  return JumioVerificationProcesses.query().findOne(params);
 };
 
 export const deleteUserJumioVerificationProcess = async (
