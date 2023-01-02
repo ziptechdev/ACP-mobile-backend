@@ -149,7 +149,7 @@ export interface VerificationProccessRejectedReasson {
 }
 
 export interface VerificationProcessParameters {
-  username?: string;
+  userRefference?: string;
   accountId?: string;
   workflowExecutionId?: string;
 }

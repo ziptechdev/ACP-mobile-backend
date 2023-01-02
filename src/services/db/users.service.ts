@@ -50,6 +50,7 @@ export const loginUser = async (
 ): Promise<User> => {
   const user = await User.query()
     .withGraphJoined('tokens')
+    .withGraphJoined('jumioVerificationProcess')
     .findOne({ username });
 
   if (!user || !(await compare(password, user.password))) {
@@ -60,7 +61,19 @@ export const loginUser = async (
     );
   }
 
+  if (
+    !user.jumioVerificationProcess ||
+    user.jumioVerificationProcess.status !== 'PASSED'
+  ) {
+    throw new HttpError(
+      401,
+      'User identity is not verified',
+      ErrorTypes.UNAUTHORIZED
+    );
+  }
+
   const jwt = require('jsonwebtoken');
+  let deletedTokens = 0;
 
   user.tokens.forEach((userToken: UserTokens) => {
     jwt.verify(
@@ -69,12 +82,13 @@ export const loginUser = async (
       async function (error: Error | null) {
         if (error) {
           await userToken.$query().delete();
+          deletedTokens++;
         }
       }
     );
   });
 
-  if (jwtConfig.sessionNumber <= user.tokens.length) {
+  if (jwtConfig.sessionNumber <= user.tokens.length - deletedTokens) {
     throw new HttpError(400, 'Session limit exceeded', ErrorTypes.UNAUTHORIZED);
   }
 

@@ -27,7 +27,6 @@ export async function sendRequest<T>(
       .request({ url, method, data, ...configWithAddedHeaders })
       .then(response => resolve(response.data as T))
       .catch((error: AxiosError<string>) => {
-        console.log(error);
         reject(error);
       });
   });

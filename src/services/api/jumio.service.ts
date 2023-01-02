@@ -25,12 +25,6 @@ import JumioVerificationProcesses from '../../models/JumioVerificationProcesses'
 import { WorkflowDetails } from '../../shared/types/jumoTypes/workflowDetailsTypes';
 import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
 
-export const getUserJumioVerificationProcessByUsername = async (
-  username: string
-): Promise<JumioVerificationProcesses> => {
-  return JumioVerificationProcesses.query().findOne({ username });
-};
-
 export const getUserJumioVerificationProcess = async (
   params: VerificationProcessParameters
 ): Promise<JumioVerificationProcesses> => {
@@ -38,10 +32,10 @@ export const getUserJumioVerificationProcess = async (
 };
 
 export const deleteUserJumioVerificationProcess = async (
-  username: string
+  userRefference: string
 ): Promise<void> => {
   await JumioVerificationProcesses.query()
-    .where('username', '=', username)
+    .where('user_refference', '=', userRefference)
     .delete();
 };
 
@@ -104,7 +98,7 @@ export const startIndentityVerification = async (
   await JumioVerificationProcesses.query().insert({
     accountId: response.account.id,
     workflowExecutionId: response.workflowExecution.id,
-    username: data.username,
+    userRefference: data.username,
     token: token.access_token,
   });
 

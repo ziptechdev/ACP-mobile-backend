@@ -80,35 +80,33 @@ export const kycRegister = async (
       formatCardExpirationDate(data.bankAccount.expirationDate),
     ]);
 
-    // const user = await User.transaction(async trx => {
-    //   const kycRegistration = await registerKycUser(
-    //     trx,
-    //     filterParams<KYCRegisterParams>(
-    //       { ...data.user, password: hashedPassword },
-    //       kycRegisterUserWhiteListedParams
-    //     )
-    //   );
-    //
-    //   await registerUserBankAccount(
-    //     trx,
-    //     kycRegistration,
-    //     filterParams<BankAccountParams>(
-    //       {
-    //         ...data.bankAccount,
-    //         bankNumber: hashedBankNumber,
-    //         accountNumber: hashedAccountNumber,
-    //         expirationDate: formatedExpirationDate,
-    //       },
-    //       kycRegisterBankAccountWhiteListedParams
-    //     )
-    //   );
-    //
-    //   return kycRegistration;
-    // });
+    const user = await User.transaction(async trx => {
+      const kycRegistration = await registerKycUser(
+        trx,
+        filterParams<KYCRegisterParams>(
+          { ...data.user, password: hashedPassword },
+          kycRegisterUserWhiteListedParams
+        )
+      );
 
-    //TODO: KYC Verification
+      await registerUserBankAccount(
+        trx,
+        kycRegistration,
+        filterParams<BankAccountParams>(
+          {
+            ...data.bankAccount,
+            bankNumber: hashedBankNumber,
+            accountNumber: hashedAccountNumber,
+            expirationDate: formatedExpirationDate,
+          },
+          kycRegisterBankAccountWhiteListedParams
+        )
+      );
 
-    httpResponse(res, {}, httpStatus.CREATED);
+      return kycRegistration;
+    });
+
+    httpResponse(res, serializeKycUser(user), httpStatus.CREATED);
   } catch (error: any) {
     next(error);
   }

@@ -23,7 +23,11 @@ router.post(
   eligibilityRegister
 );
 
-router.post('/kyc-register', kycRegisterValidation, kycRegister);
+router.post(
+  '/kyc-register/account-id/:accountId/workflow-execution-id/:workflowExecutionId',
+  kycRegisterValidation,
+  kycRegister
+);
 router.post('/verify-email', verifyEmailValidation, verifyEmail);
 router.post('/login', loginValidation, login);
 router.post('/refresh-token', verifyRefreshToken, refreshToken);

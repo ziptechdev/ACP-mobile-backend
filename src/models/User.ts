@@ -25,6 +25,7 @@ export default class User extends BaseModel {
   count!: number;
   token!: { access: string; refresh: string };
   tokens!: Array<UserTokens>;
+  jumioVerificationProcess!: JumioVerificationProcesses;
 
   static get tableName(): string {
     return 'users';
@@ -65,7 +66,7 @@ export default class User extends BaseModel {
         modelClass: JumioVerificationProcesses,
         join: {
           from: 'users.username',
-          to: 'jumio_verification_processes.username',
+          to: 'jumio_verification_processes.user_refference',
         },
       },
     };

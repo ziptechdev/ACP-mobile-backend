@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     'jumio_verification_processes',
     function (table: CreateTableBuilder) {
       table.increments('id').primary().unsigned();
-      table.string('username').unique().index();
+      table.string('user_refference').unique().index();
       table.string('account_id').unique().index();
       table.string('workflow_execution_id').unique().index();
       table

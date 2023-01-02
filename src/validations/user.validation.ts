@@ -5,6 +5,7 @@ import { isPasswordConfirmedValidationRule } from './rules/isPasswordConfirmed.v
 import { isCardDateInTheFutureValidationRule } from './rules/isCardDateInTheFuture.validationRule';
 import { isExistingUsernameValidationRule } from './rules/isExistingUsername.validationRule';
 import { isExistingSocialSecurityNumberValidationRule } from './rules/isExistingSocialSecurityNumber.validationRule';
+import { hasJumioVerificationProcess } from './rules/hasJumioVerificationProcess';
 
 // [POST] /api/v1/users/eligibility-register/:eligibilityCheckId
 export const eligibilityRegisterValidation = [
@@ -18,7 +19,7 @@ export const eligibilityRegisterValidation = [
   validateResult,
 ];
 
-// [POST] /api/v1/users/kyc-register
+// [POST] /api/v1/users/kyc-register/account-id/:accountId/workflow-execution-id/:workflowExecutionId
 export const kycRegisterValidation = [
   body('user').exists(),
   body('user.firstName').exists().isLength({ min: 3, max: 20 }),
@@ -26,7 +27,8 @@ export const kycRegisterValidation = [
   body('user.username')
     .exists()
     .isEmail()
-    .custom(isExistingUsernameValidationRule),
+    .custom(isExistingUsernameValidationRule)
+    .custom(hasJumioVerificationProcess),
   body('user.password')
     .exists()
     .isStrongPassword()

@@ -8,7 +8,7 @@ export default class JumioVerificationProcesses extends BaseModel {
   }
 
   id!: number;
-  username: string;
+  userRefference: string;
   accountId: string;
   workflowExecutionId: string;
   status!: string;
@@ -22,7 +22,7 @@ export default class JumioVerificationProcesses extends BaseModel {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'jumio_verification_processes.username',
+          from: 'jumio_verification_processes.user_refference',
           to: 'users.username',
         },
       },
