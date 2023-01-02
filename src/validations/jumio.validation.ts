@@ -1,10 +1,11 @@
 import { body, check } from 'express-validator';
 import { validateResult } from './validateResult';
-import { NextFunction, Request, Response } from 'express';
 import { FileFilterCallback } from 'multer';
 import sharp, { Metadata } from 'sharp';
 import { jumioUserVerificationProcessCheck } from './rules/jumioUserVerificationProcessCheck';
 import { parseFileBufferFromRequest } from '../utils/file';
+import { HttpError } from '../utils/httpError';
+import { ErrorTypes } from '../config/constants';
 
 const multer = require('multer');
 const upload = multer({
@@ -13,18 +14,21 @@ const upload = multer({
     file: Express.Multer.File,
     cb: (error: Error | null, acceptFile: boolean) => void
   ) => {
-    //return cb(new Error('test nesto'),false);
-    if (file.mimetype !== 'image/jpeg') {
+    if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
       // Reject the file if it is not a JPEG image
-      return cb(new Error('Invalid image type'), false);
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      return cb(new Error('Invalid image size'), false);
+      return cb(
+        new HttpError(
+          422,
+          `Invalid image type: ${file.mimetype}`,
+          ErrorTypes.VALIDATION_ERROR
+        ),
+        false
+      );
     }
 
     return cb(null, true);
   },
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 // [POST] /api/v1/jumio/resident-identity-verification
