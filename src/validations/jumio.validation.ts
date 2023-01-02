@@ -6,6 +6,7 @@ import { jumioUserVerificationProcessCheck } from './rules/jumioUserVerification
 import { parseFileBufferFromRequest } from '../utils/file';
 import { HttpError } from '../utils/httpError';
 import { ErrorTypes } from '../config/constants';
+import { ValidationErrorMessages } from '../models/ValidationErrorMessages';
 
 const multer = require('multer');
 const upload = multer({
@@ -15,7 +16,6 @@ const upload = multer({
     cb: (error: Error | null, acceptFile: boolean) => void
   ) => {
     if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
-      // Reject the file if it is not a JPEG image
       return cb(
         new HttpError(
           422,
@@ -40,26 +40,44 @@ export const jumioIdDocumentsVerification = [
   ]),
   check('username')
     .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED)
     .isEmail()
+    .withMessage(ValidationErrorMessages.EMAIL)
     .custom(jumioUserVerificationProcessCheck),
-  check('userIp').exists(),
-  check('userState').exists(),
+  check('userIp').exists().withMessage(ValidationErrorMessages.REQUIRED),
+  check('userState').exists().withMessage(ValidationErrorMessages.REQUIRED),
   check('consentOptained')
     .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED)
     .isString()
-    .matches(/^(yes|no|na)$/),
-  check('consentOptainedAt').exists(),
+    .withMessage(ValidationErrorMessages.STRING)
+    .matches(/^(yes|no|na)$/)
+    .withMessage('Posible values: yes, no, na'),
+  check('consentOptainedAt')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
   validateResult,
 ];
 
 //[POST] /api/v1/jumio/callback
 export const jumioCallbackValidation = [
-  body('callbackSentAt').exists(),
-  body('workflowExecution').exists(),
-  body('workflowExecution.id').exists(),
-  body('workflowExecution.href').exists(),
-  body('workflowExecution.definitionKey').exists(),
-  body('workflowExecution.status').exists(),
-  body('account').exists(),
-  body('account.id'),
+  body('callbackSentAt').exists().withMessage(ValidationErrorMessages.REQUIRED),
+  body('workflowExecution')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
+  body('workflowExecution.id')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
+  body('workflowExecution.href')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
+  body('workflowExecution.definitionKey')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
+  body('workflowExecution.status')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
+  body('account').exists().withMessage(ValidationErrorMessages.REQUIRED),
+  body('account.id').exists().withMessage(ValidationErrorMessages.REQUIRED),
+  validateResult,
 ];

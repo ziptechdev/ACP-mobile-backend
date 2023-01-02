@@ -23,14 +23,17 @@ export const errorHandler = (
   next: NextFunction
 ): void => {
   const response = {
+    statusCode: err.status,
     message: err.message,
-    data: err.data,
-    type: err.type,
-    stack: err.stack,
+    data: {
+      type: err.type,
+      stack: err.stack,
+      ...err.data,
+    },
   };
 
   if (env !== 'development') {
-    delete response.stack;
+    delete response.data.stack;
   }
 
   logger.error(err);
