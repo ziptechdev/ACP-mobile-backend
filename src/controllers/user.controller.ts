@@ -106,8 +106,6 @@ export const kycRegister = async (
       return kycRegistration;
     });
 
-    //TODO: KYC Verification
-
     httpResponse(res, serializeKycUser(user), httpStatus.CREATED);
   } catch (error: any) {
     next(error);

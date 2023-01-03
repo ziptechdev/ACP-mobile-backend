@@ -14,6 +14,7 @@ import { HttpError } from '../utils/httpError';
 import logger from '../config/logger';
 import { ErrorTypes } from '../config/constants';
 import httpStatus from 'http-status';
+import { MulterError } from 'multer';
 
 export const errorHandler = (
   err: HttpError,
@@ -22,14 +23,17 @@ export const errorHandler = (
   next: NextFunction
 ): void => {
   const response = {
+    statusCode: err.status,
     message: err.message,
-    data: err.data,
-    type: err.type,
-    stack: err.stack,
+    data: {
+      type: err.type,
+      stack: err.stack,
+      ...err.data,
+    },
   };
 
   if (env !== 'development') {
-    delete response.stack;
+    delete response.data.stack;
   }
 
   logger.error(err);
@@ -127,6 +131,12 @@ export const errorConverter = (
       err.message,
       ErrorTypes.NV_INTERNAL_ERROR,
       { links: err.links }
+    );
+  } else if (err instanceof MulterError) {
+    convertedError = new HttpError(
+      422,
+      `${err.message} ${err.field}`,
+      ErrorTypes.VALIDATION_ERROR
     );
   } else if (!(err instanceof HttpError)) {
     convertedError = new HttpError(

@@ -40,3 +40,8 @@ export const jwtConfig = {
 };
 
 export const fromEmailAddress = process.env.MAIL_FROM_ADDRESS;
+
+export const jumioCredentials = {
+  username: process.env.JUMIO_USERNAME,
+  password: process.env.JUMIO_PASSWORD,
+};

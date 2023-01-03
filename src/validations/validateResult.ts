@@ -11,14 +11,9 @@ export const validateResult = (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new HttpError(
-      422,
-      errors.array({ onlyFirstError: true })[0].msg,
-      ErrorTypes.VALIDATION_ERROR,
-      {
-        errors: errors.array({ onlyFirstError: true }),
-      }
-    );
+    throw new HttpError(422, 'Validation Error', ErrorTypes.VALIDATION_ERROR, {
+      errors: errors.array({ onlyFirstError: true }),
+    });
   }
 
   return next();
