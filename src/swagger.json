@@ -149,7 +149,7 @@
         }
       }
     },
-    "/users/kyc-register": {
+    "/users/kyc-register/account-id/{accountId}/workflow-execution-id/{workflowExecutionId}": {
       "post": {
         "tags":[
           "Users"
@@ -157,6 +157,26 @@
         "summary":"KYC Register",
         "description":"Register user with KYC check",
         "operationId":"kycRegister",
+        "parameters":[
+          {
+            "name":"accountId",
+            "in":"path",
+            "description":"Jumio Account ID",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          },
+          {
+            "name":"workflowExecutionId",
+            "in":"path",
+            "description":"Jumio Workflow Execution ID",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
         "requestBody":{
           "description":"KYC Register",
           "content":{
@@ -421,6 +441,59 @@
           }
         }
       }
+    },
+    "/jumio/resident-identity-verification": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Jumio resident identity verification",
+        "description": "Checks the identity of a US resident by analysing the provided selfie and document",
+        "operationId": "jumioUserVerfication",
+        "requestBody": {
+          "description": "User verification parameters",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/JumioUserVerificationBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses":{
+          "201":{
+            "description":"User verification process started",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/JumioUserVerificationSuccess"
+                }
+              }
+            }
+          },
+          "422":{
+            "description":"Unprocessable Entity",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components":{
@@ -609,9 +682,13 @@
             "properties": {
               "username":{
                 "type":"string",
+                "required": true,
+                "description": "Validation:required|valid_email|unique",
                 "example":"john.doe@example.com"
               },
               "password":{
+                "required": true,
+                "description": "Validation:required|strong|confirmed",
                 "type":"string",
                 "example":"password"
               }
@@ -672,7 +749,7 @@
       "ErrorResponse": {
         "type":"object",
         "properties":{
-          "status":{
+          "statusCode":{
             "type":"number",
             "example": 400
           },
@@ -680,13 +757,14 @@
             "type":"string",
             "example":"Address is not valid"
           },
-          "type":{
-            "type":"string",
-            "example":"NV_VALIDATION_ERROR"
-          },
           "data":{
             "type":"object",
-            "example":{}
+            "properties": {
+              "type":{
+                "type":"string",
+                "example":"NV_VALIDATION_ERROR"
+              }
+            }
           }
         }
       },
@@ -698,30 +776,49 @@
             "properties": {
               "firstName": {
                 "type": "string",
+                "required": true,
+                "minLength": 3,
+                "maxLength": 20,
+                "description": "Validation:required|length:3-20",
                 "example": "John"
               },
               "lastName": {
                 "type": "string",
+                "required": true,
+                "minLength": 3,
+                "maxLength": 20,
+                "description": "Validation:required|length:3-20",
                 "example": "Doe"
               },
               "username": {
                 "type": "string",
+                "required": true,
+                "description": "Validation:required|valid_email|unique|started_jumio_verification_process",
                 "example": "john.doe@example.com"
               },
               "password":{
                 "type":"string",
+                "required": true,
+                "description": "Validation:required|strong|confirmed",
                 "example":"Iamstrong111!"
               },
               "confirmedPassword": {
                 "type": "string",
+                "required": true,
+                "description": "Validation:required",
                 "example": "Iamstrong111!"
               },
               "phoneNumber": {
                 "type": "string",
+                "required": true,
+                "description": "Validation:required",
                 "example": "(555) 555-1234"
               },
               "socialSecurityNumber": {
                 "type": "string",
+                "required": true,
+                "pattern": "^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$",
+                "description": "Validation:required|unique",
                 "example": "111-22-3333"
               }
             }
@@ -731,22 +828,37 @@
             "properties": {
               "bankName": {
                 "type": "string",
+                "required": true,
+                "minLength": 3,
+                "maxLength": 20,
+                "description": "Validation:required|length:3-20",
                 "example": "Example Bank"
               },
               "bankNumber": {
                 "type": "string",
+                "required": true,
+                "description": "Validation:required",
                 "example": "021000021"
               },
               "accountHolderName": {
                 "type": "string",
+                "required": true,
+                "minLength": 3,
+                "maxLength": 20,
+                "description": "Validation:required|length:3-20",
                 "example": "John Doe"
               },
               "accountNumber": {
                 "type": "string",
+                "required": true,
+                "description": "Validation:required",
                 "example": "13719713158835300"
               },
               "expirationDate": {
                 "type": "string",
+                "required": true,
+                "pattern": "^(0[1-9]|1[0-2])\\/([0-9]{2})$",
+                "description": "Validation:required|future_date",
                 "example": "01/23"
               }
             }
@@ -796,6 +908,8 @@
         "properties": {
           "email": {
             "type": "string",
+            "required": true,
+            "description": "Validation:required|valid_email",
             "example": "john.doe@example.com"
           }
         }
@@ -827,10 +941,14 @@
         "properties": {
           "username": {
             "type": "string",
+            "required": true,
+            "description": "Validation:required",
             "example": "john.doe@example.com"
           },
           "password": {
             "type": "string",
+            "required": true,
+            "description": "Validation:required",
             "example": "password"
           }
         }
@@ -909,7 +1027,7 @@
       "InternalServerError": {
         "type":"object",
         "properties":{
-          "status":{
+          "statusCode":{
             "type":"number",
             "example": 500
           },
@@ -917,34 +1035,35 @@
             "type":"string",
             "example":"Something went wrong"
           },
-          "type":{
-            "type":"string",
-            "example":"INTERNAL_SERVER_ERROR"
-          },
           "data":{
             "type":"object",
-            "example":{}
+            "properties": {
+              "type":{
+                "type":"string",
+                "example":"INTERNAL_SERVER_ERROR"
+              }
+            }
           }
         }
       },
       "ValidationError": {
         "type":"object",
         "properties":{
-          "status":{
+          "statusCode":{
             "type":"number",
             "example": 422
           },
           "message":{
             "type":"string",
-            "example":"Invalid value"
-          },
-          "type":{
-            "type":"string",
-            "example":"VALIDATION_ERROR"
+            "example":"Validation Error"
           },
           "data": {
             "type": "object",
             "properties": {
+              "type":{
+                "type":"string",
+                "example":"VALIDATION_ERROR"
+              },
               "errors": {
                 "type": "array",
                 "items": {
@@ -956,21 +1075,24 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Email is required"
+                      "example": "Field is required"
                     }
                   }
                 }
               }
             },
             "example": {
+              "type": "VALIDATION_ERROR",
               "errors": [
                 {
-                  "field": "email",
-                  "message": "Email is required"
+                  "msg": "Field is required",
+                  "param": "email",
+                  "location": "body"
                 },
                 {
-                  "field": "password",
-                  "message": "Password is required"
+                  "msg": "Field is required",
+                  "param": "email",
+                  "location": "body"
                 }
               ]
             }
@@ -980,7 +1102,7 @@
       "UnauthorizedError": {
         "type":"object",
         "properties":{
-          "status":{
+          "statusCode":{
             "type":"number",
             "example": 401
           },
@@ -988,13 +1110,14 @@
             "type":"string",
             "example":"Unauthorized: Invalid token"
           },
-          "type":{
-            "type":"string",
-            "example":"UNAUTHORIZED"
-          },
-          "data":{
+          "data": {
             "type":"object",
-            "example":{}
+            "properties": {
+              "type":{
+                "type":"string",
+                "example":"UNAUTHORIZED"
+              }
+            }
           }
         }
       },
@@ -1046,6 +1169,100 @@
                   "refresh": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJreWMucmVnaXN0ZXJlZEBleGFtcGxlLmNvbSIsImZpcnN0TmFtZSI6Ikt5YyIsIm1pZGRsZU5hbWUiOm51bGwsImxhc3ROYW1lIjoiUmVnaXN0ZXJlZCIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5IiwiaWF0IjoxNjcxOTg0MzM3LCJleHAiOjE2NzIwNzA3Mzd9.Ma042i5_QdtqGH1BTdkDV6pteYHIOXekFLD26kMFQ8w"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "JumioUserVerificationBody": {
+        "type": "object",
+        "properties": {
+          "documentIdFront": {
+            "type": "string",
+            "format": "binary",
+            "required": true,
+            "description": "Validation:required|mimetype:jpeg,png|filesize:5mb"
+          },
+          "documentIdBack": {
+            "type": "string",
+            "format": "binary",
+            "required": true,
+            "description": "Validation:required|mimetype:jpeg,png|filesize:5mb"
+          },
+          "selfie": {
+            "type": "string",
+            "format": "binary",
+            "required": true,
+            "description": "Validation:required|mimetype:jpeg,png|filesize:5mb"
+          },
+          "username": {
+            "type": "string",
+            "required": true,
+            "description": "Validation:required|valid_email|unique",
+            "example": "john.doe@example.com"
+          },
+          "userIp": {
+            "type": "string",
+            "required": true,
+            "description": "Validation:required",
+            "example": "192.168.0.1"
+          },
+          "userState": {
+            "type": "string",
+            "required": true,
+            "description": "Validation:required",
+            "example": "IL"
+          },
+          "consentOptained": {
+            "type": "string",
+            "required": true,
+            "description": "Validation:required",
+            "enum": ["yes", "no", "na"],
+            "example": "yes"
+          },
+          "consentOptainedAt": {
+            "type": "string",
+            "required": true,
+            "description": "Validation:required",
+            "example": "2022-12-15T17:20:35.000Z"
+          }
+        }
+      },
+      "JumioUserVerificationSuccess": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "The request has been fulfilled, resulting in the creation of a new resource."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "example": "2023-01-03T02:06:11.961Z"
+              },
+              "account":{
+                "type":"object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "540984e4-ba54-4d29-8eae-a335de53a805"
+                  }
+                }
+              },
+              "workflowExecution": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "3856f8e7-bc61-4993-92a2-4ca307f1d610"
                   }
                 }
               }

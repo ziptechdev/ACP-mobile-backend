@@ -62,7 +62,9 @@ export const kycRegisterValidation = [
     .isStrongPassword()
     .withMessage(ValidationErrorMessages.STRONG_PASSWORD)
     .custom(isPasswordConfirmedValidationRule),
-  body('user.phoneNumber').exists(),
+  body('user.phoneNumber')
+    .exists()
+    .withMessage(ValidationErrorMessages.REQUIRED),
   body('user.socialSecurityNumber')
     .exists()
     .withMessage(ValidationErrorMessages.REQUIRED)
