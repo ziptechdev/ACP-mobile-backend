@@ -9,6 +9,7 @@ export interface jumioAccountPayload {
   customerInternalReference: string;
   workflowDefinition: IdAndIndentityVerification;
   userReference: string;
+  callbackUrl: string;
   userConsent: UserConsent;
 }
 

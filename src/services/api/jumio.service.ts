@@ -2,7 +2,7 @@ import {
   jumioAuthPayload,
   jumioAuthSuccessResponse,
 } from '../../shared/types/jumoTypes';
-import { jumioCredentials } from '../../config/vars';
+import { jumioCallbackUrl, jumioCredentials } from '../../config/vars';
 import {
   jumioAccountPayload,
   jumioAccountSuccessResponse,
@@ -212,6 +212,7 @@ const jumioAccountCreate = async (
         },
       ],
     },
+    callbackUrl: jumioCallbackUrl,
     userReference: await generateHashedValue(username),
     userConsent,
   };

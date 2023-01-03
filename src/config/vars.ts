@@ -45,3 +45,5 @@ export const jumioCredentials = {
   username: process.env.JUMIO_USERNAME,
   password: process.env.JUMIO_PASSWORD,
 };
+
+export const jumioCallbackUrl = process.env.JUMIO_CALLBACK_URL;
