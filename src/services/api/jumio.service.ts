@@ -2,7 +2,11 @@ import {
   jumioAuthPayload,
   jumioAuthSuccessResponse,
 } from '../../shared/types/jumoTypes';
-import { jumioCallbackUrl, jumioCredentials } from '../../config/vars';
+import {
+  fromEmailAddress,
+  jumioCallbackUrl,
+  jumioCredentials,
+} from '../../config/vars';
 import {
   jumioAccountPayload,
   jumioAccountSuccessResponse,
@@ -24,6 +28,8 @@ import { Readable } from 'stream';
 import JumioVerificationProcesses from '../../models/JumioVerificationProcesses';
 import { WorkflowDetails } from '../../shared/types/jumoTypes/workflowDetailsTypes';
 import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
+import { JumioCallbackParameters } from '../../shared/types/jumoTypes/jumioCallbackParametersTypes';
+import { sendEmail } from '../../mailer';
 
 export const getUserJumioVerificationProcess = async (
   params: VerificationProcessParameters
@@ -172,6 +178,49 @@ export const getVerificationProcessStatus = async (
   }
 
   return verificationProccessStatus;
+};
+
+export const jumioProcessCallback = async (
+  data: JumioCallbackParameters
+): Promise<void> => {
+  const jumioVerificationProcess = await getUserJumioVerificationProcess({
+    workflowExecutionId: data.workflowExecution.id,
+    accountId: data.account.id,
+  });
+
+  if (jumioVerificationProcess) {
+    try {
+      let html = '';
+
+      const jumioVerificationProcessStatus: VerificationProcessStatus =
+        await getVerificationProcessStatus(
+          jumioVerificationProcess.accountId,
+          jumioVerificationProcess.workflowExecutionId,
+          jumioVerificationProcess.token
+        );
+
+      html += `<h2>${jumioVerificationProcessStatus.status}</h2>`;
+
+      if (jumioVerificationProcessStatus.status === 'REJECTED') {
+        html += `<h3>Reasons:</h3><ul>`;
+        jumioVerificationProcessStatus.reasons.forEach(reason => {
+          html += `<li>${reason.criteria}: ${reason.lable}</li>`;
+        });
+        html += '</ul>';
+
+        await sendEmail({
+          from: fromEmailAddress,
+          to: jumioVerificationProcess.userRefference,
+          subject: 'ACP user identity validation results',
+          html: html,
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  } else {
+    console.log('Jumio callback parameters not processed', data);
+  }
 };
 
 const jumioAuth = async (): Promise<jumioAuthSuccessResponse> => {
