@@ -19,7 +19,6 @@ import {
   kycRegisterUserWhiteListedParams,
 } from '../shared/types/userTypes/whiteListedParams';
 import {
-  EligibilityRegisterBody,
   EligibilityRegisterParams,
   KYCRegisterBody,
   KYCRegisterParams,
@@ -45,12 +44,12 @@ export const eligibilityRegister = async (
 ): Promise<void> => {
   try {
     const eligibilityCheckId = req.params.eligibilityCheckId;
-    const data = Object.assign({}, req.body) as EligibilityRegisterBody;
-    const hashedPassword = await generateHashedValue(data.user.password);
+    const data = Object.assign({}, req.body) as EligibilityRegisterParams;
+    const hashedPassword = await generateHashedValue(data.password);
     const user = await registerEligibleUser(
       eligibilityCheckId,
       filterParams<EligibilityRegisterParams>(
-        { ...data.user, password: hashedPassword },
+        { ...data, password: hashedPassword },
         eligibilityRegisterWhiteListedParams
       )
     );
@@ -74,17 +73,17 @@ export const kycRegister = async (
       hashedAccountNumber,
       formatedExpirationDate,
     ] = await Promise.all([
-      generateHashedValue(data.user.password),
-      generateHashedValue(data.bankAccount.bankNumber),
-      generateHashedValue(data.bankAccount.accountNumber),
-      formatCardExpirationDate(data.bankAccount.expirationDate),
+      generateHashedValue(data.password),
+      generateHashedValue(data.bankNumber),
+      generateHashedValue(data.accountNumber),
+      formatCardExpirationDate(data.expirationDate),
     ]);
 
     const user = await User.transaction(async trx => {
       const kycRegistration = await registerKycUser(
         trx,
         filterParams<KYCRegisterParams>(
-          { ...data.user, password: hashedPassword },
+          { ...data, password: hashedPassword },
           kycRegisterUserWhiteListedParams
         )
       );
@@ -94,7 +93,7 @@ export const kycRegister = async (
         kycRegistration,
         filterParams<BankAccountParams>(
           {
-            ...data.bankAccount,
+            ...data,
             bankNumber: hashedBankNumber,
             accountNumber: hashedAccountNumber,
             expirationDate: formatedExpirationDate,
