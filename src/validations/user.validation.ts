@@ -12,14 +12,7 @@ import { ValidationErrorMessages } from '../models/ValidationErrorMessages';
 export const eligibilityRegisterValidation = [
   param('eligibilityCheckId')
     .exists()
-    .withMessage(ValidationErrorMessages.REQUIRED)
-    .isLength({
-      min: ELIGIBILITY_CHECK_ID_LENGTH,
-      max: ELIGIBILITY_CHECK_ID_LENGTH,
-    })
-    .withMessage(
-      `${ValidationErrorMessages.RANGE} (${ELIGIBILITY_CHECK_ID_LENGTH} - ${ELIGIBILITY_CHECK_ID_LENGTH}`
-    ),
+    .withMessage(ValidationErrorMessages.REQUIRED),
   body('user').exists().withMessage(ValidationErrorMessages.REQUIRED),
   body('user.username')
     .exists()
