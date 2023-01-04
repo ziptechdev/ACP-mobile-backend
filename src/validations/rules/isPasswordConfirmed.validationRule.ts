@@ -4,5 +4,5 @@ export const isPasswordConfirmedValidationRule: CustomValidator = (
   value,
   { req }
 ) => {
-  return value === req.body.user.confirmedPassword;
+  return value === req.body.confirmedPassword;
 };
