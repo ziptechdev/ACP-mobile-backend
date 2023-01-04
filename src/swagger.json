@@ -684,13 +684,19 @@
                 "type":"string",
                 "required": true,
                 "description": "Validation:required|valid_email|unique",
-                "example":"john.doe@example.com"
+                "example":"john.doe-unique@example.com"
               },
               "password":{
                 "required": true,
                 "description": "Validation:required|strong|confirmed",
                 "type":"string",
-                "example":"password"
+                "example":"Strongpassword123!"
+              },
+              "confirmedPassword": {
+                "required": true,
+                "description": "Validation:required",
+                "type":"string",
+                "example":"Strongpassword123!"
               }
             }
           }
