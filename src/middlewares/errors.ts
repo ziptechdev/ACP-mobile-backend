@@ -15,6 +15,7 @@ import logger from '../config/logger';
 import { ErrorTypes } from '../config/constants';
 import httpStatus from 'http-status';
 import { MulterError } from 'multer';
+import { AxiosError } from 'axios';
 
 export const errorHandler = (
   err: HttpError,
@@ -137,6 +138,12 @@ export const errorConverter = (
       422,
       `${err.message} ${err.field}`,
       ErrorTypes.VALIDATION_ERROR
+    );
+  } else if (err instanceof AxiosError) {
+    convertedError = new HttpError(
+      err.response.status,
+      `${err.message} ${err.response.data.title ?? ''}`,
+      ErrorTypes.SERVICE_ERROR
     );
   } else if (!(err instanceof HttpError)) {
     convertedError = new HttpError(
