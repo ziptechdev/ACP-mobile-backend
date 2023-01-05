@@ -79,26 +79,30 @@ export const startIndentityVerification = async (
     token.access_token
   );
 
-  let idDocumentUploadResponse: WorkflowExecutionResponse;
+  const sendIdImagePromises: Array<Promise<WorkflowExecutionResponse>> = [];
 
   for (const credential of accountDetails.workflowExecution.credentials) {
     if (!credential.hasOwnProperty('api')) continue;
 
     for (const key in credential.api.parts) {
-      idDocumentUploadResponse = await sendIdImage(
-        credential.api.parts[key],
-        credential.api.token,
-        data.idImages[key]
+      sendIdImagePromises.push(
+        sendIdImage(
+          credential.api.parts[key],
+          credential.api.token,
+          data.idImages[key]
+        )
       );
     }
   }
 
+  const idDocumentUploadResponses = await Promise.all(sendIdImagePromises);
+
   const response: WorkflowExecutionResponse = await sendRequest(
     'put',
-    idDocumentUploadResponse.api.workflowExecution,
+    idDocumentUploadResponses[0].api.workflowExecution,
     {},
     {},
-    idDocumentUploadResponse.api.token
+    idDocumentUploadResponses[0].api.token
   );
 
   await JumioVerificationProcesses.query().insert({
