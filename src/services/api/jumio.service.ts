@@ -30,6 +30,7 @@ import { WorkflowDetails } from '../../shared/types/jumoTypes/workflowDetailsTyp
 import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
 import { JumioCallbackParameters } from '../../shared/types/jumoTypes/jumioCallbackParametersTypes';
 import { sendEmail } from '../../mailer';
+import { JumioVerificationProcessStatus } from '../../models/JumioVerificationProcessStatus';
 
 export const getUserJumioVerificationProcess = async (
   params: VerificationProcessParameters
@@ -205,14 +206,19 @@ export const jumioProcessCallback = async (
 
       html += `<h2>${jumioVerificationProcessStatus.status}</h2>`;
 
-      if (jumioVerificationProcessStatus.status === 'REJECTED') {
+      if (
+        jumioVerificationProcessStatus.status ===
+        JumioVerificationProcessStatus.REJECTED
+      ) {
         html += `<h3>Reasons:</h3><ul>`;
         jumioVerificationProcessStatus.reasons.forEach(reason => {
           html += `<li>${reason.criteria}: ${reason.lable}</li>`;
         });
         html += '</ul>';
 
-        await jumioVerificationProcess.$query().delete();
+        await jumioVerificationProcess
+          .$query()
+          .patch({ status: JumioVerificationProcessStatus.REJECTED });
       }
 
       await sendEmail({
