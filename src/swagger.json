@@ -900,7 +900,7 @@
           "email": {
             "type": "string",
             "required": true,
-            "description": "Validation:required|valid_email",
+            "description": "Validation:required|valid_email|unique",
             "example": "john.doe@example.com"
           }
         }

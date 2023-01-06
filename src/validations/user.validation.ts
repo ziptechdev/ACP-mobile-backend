@@ -90,7 +90,8 @@ export const verifyEmailValidation = [
     .exists()
     .withMessage(ValidationErrorMessages.REQUIRED)
     .isEmail()
-    .withMessage(ValidationErrorMessages.EMAIL),
+    .withMessage(ValidationErrorMessages.EMAIL)
+    .custom(isExistingUsernameValidationRule),
   validateResult,
 ];
 
