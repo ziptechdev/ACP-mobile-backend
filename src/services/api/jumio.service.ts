@@ -212,15 +212,18 @@ export const jumioProcessCallback = async (
         });
         html += '</ul>';
 
-        await sendEmail({
-          from: fromEmailAddress,
-          to: jumioVerificationProcess.userRefference,
-          subject: 'ACP user identity validation results',
-          html: html,
-        });
+        await jumioVerificationProcess.$query().delete();
       }
+
+      await sendEmail({
+        from: fromEmailAddress,
+        to: jumioVerificationProcess.userRefference,
+        subject: 'ACP user identity validation results',
+        html: html,
+      });
     } catch (error: any) {
       console.log(error);
+      await jumioVerificationProcess.$query().delete();
     }
   } else {
     console.log('Jumio callback parameters not processed', data);
