@@ -69,7 +69,7 @@ export const startIndentityVerification = async (
 
     consent: {
       obtained: data.consentOptained,
-      obtainedAt: data.consentOptainedAt,
+      obtainedAt: new Date(data.consentOptainedAt).toISOString(),
     },
   } as UserConsent;
 
