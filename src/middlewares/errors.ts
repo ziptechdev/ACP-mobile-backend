@@ -145,6 +145,12 @@ export const errorConverter = (
       `${err.message} ${err.response.data.title ?? ''}`,
       ErrorTypes.SERVICE_ERROR
     );
+  } else if (err instanceof RangeError) {
+    convertedError = new HttpError(
+      400,
+      err.message,
+      ErrorTypes.UNPROCESSABLE_ENTITY
+    );
   } else if (!(err instanceof HttpError)) {
     convertedError = new HttpError(
       500,
