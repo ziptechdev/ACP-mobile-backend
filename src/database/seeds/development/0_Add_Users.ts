@@ -1,8 +1,9 @@
 import { Knex } from 'knex';
 import { ELIGIBILITY_CHECK_ID_LENGTH } from '../../../config/constants';
 import { EligibilityCheckStatus } from '../../../models/EligibilityCheckStatus';
+import { generateHashedValue } from '../../../utils/dataGenerators';
 
-export const seed = (knex: Knex): Promise<any> => {
+export const seed = async (knex: Knex): Promise<any> => {
   // Inserts seed entries
   return knex('users').insert([
     {
@@ -34,7 +35,7 @@ export const seed = (knex: Knex): Promise<any> => {
       phoneNumber: '123456789',
       socialSecurityNumber: '333333333',
       username: 'kyc.registered@example.com',
-      password: '$2y$10$oNm.hHn/BGNdR7czd6XMdOoaUg/AAjjHeVIuVmAwzrRrVRF9EXZxe',
+      password: await generateHashedValue('Strongpassword123!'),
     },
   ]);
 };
