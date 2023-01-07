@@ -4,6 +4,7 @@ import {
   getVerificationProcessStatus,
 } from '../../services/api/jumio.service';
 import { VerificationProcessStatus } from '../../shared/types/jumoTypes/verificationProcessStatus';
+import { JumioVerificationProcessStatus } from '../../models/JumioVerificationProcessStatus';
 
 export const jumioUserVerificationProcessCheck: CustomValidator = async (
   value,
@@ -17,11 +18,11 @@ export const jumioUserVerificationProcessCheck: CustomValidator = async (
     return;
   }
 
-  if (validationProcess.status === 'PASSED') {
+  if (validationProcess.status === JumioVerificationProcessStatus.PASSED) {
     return Promise.reject('User has been verified');
-  }
-
-  if (validationProcess.status === 'PENDING') {
+  } else if (
+    validationProcess.status === JumioVerificationProcessStatus.PENDING
+  ) {
     try {
       const verificationProcessStatus: VerificationProcessStatus =
         await getVerificationProcessStatus(
@@ -46,5 +47,9 @@ export const jumioUserVerificationProcessCheck: CustomValidator = async (
     } catch (error) {
       await validationProcess.$query().delete();
     }
+  } else if (
+    validationProcess.status === JumioVerificationProcessStatus.REJECTED
+  ) {
+    await validationProcess.$query().delete();
   }
 };
