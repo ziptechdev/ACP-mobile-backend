@@ -25,7 +25,6 @@ export const corsWhitelist = (process.env.CORS_WHITELIST as string)?.split(' ');
 export const mailConfig = {
   host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,
-  secure: true,
   auth: {
     user: process.env.MAIL_USERNAME,
     pass: process.env.MAIL_PASSWORD,
